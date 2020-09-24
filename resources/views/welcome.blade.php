@@ -80,7 +80,7 @@
             @endif
 
             <div class="content">
-                <h1>Hola</h1>
+                <h1>Holssa</h1>
                 <div class="title m-b-md">
                     Laravel
                 </div>
