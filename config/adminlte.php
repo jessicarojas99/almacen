@@ -14,8 +14,8 @@ return [
     |
     */
 
-    'title' => 'Almacen',
-    'title_prefix' => '',
+    'title' => '',
+    'title_prefix' => 'Almacen |',
     'title_postfix' => '',
 
     /*
@@ -30,7 +30,7 @@ return [
     |
     */
 
-    'use_ico_only' => false,
+    'use_ico_only' => true,
     'use_full_favicon' => false,
 
     /*
@@ -45,12 +45,12 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
-    'logo_img_class' => 'brand-image img-circle elevation-3',
+    'logo' => ' ',
+    'logo_img' => 'vendor/adminlte/dist/img/logoBlanco.png',
+    'logo_img_class' => 'w-75 mx-auto d-block',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'AdminLTE',
+    'logo_img_alt' => 'EndeAndina',
 
     /*
     |--------------------------------------------------------------------------
@@ -65,9 +65,9 @@ return [
     */
 
     'usermenu_enabled' => true,
-    'usermenu_header' => false,
-    'usermenu_header_class' => 'bg-primary',
-    'usermenu_image' => false,
+    'usermenu_header' => true,
+    'usermenu_header_class' => ' ',
+    'usermenu_image' => true,
     'usermenu_desc' => false,
     'usermenu_profile_url' => false,
 
@@ -86,7 +86,7 @@ return [
     'layout_topnav' => null,
     'layout_boxed' => null,
     'layout_fixed_sidebar' => true,
-    'layout_fixed_navbar' => null,
+    'layout_fixed_navbar' => true,
     'layout_fixed_footer' => null,
 
     /*
@@ -102,9 +102,9 @@ return [
     */
 
     'classes_auth_card' => 'card-outline card-primary',
-    'classes_auth_header' => '',
+    'classes_auth_header' => 'd-none',
     'classes_auth_body' => '',
-    'classes_auth_footer' => '',
+    'classes_auth_footer' => 'd-none',
     'classes_auth_icon' => '',
     'classes_auth_btn' => 'btn-flat btn-primary',
 
@@ -126,9 +126,9 @@ return [
     'classes_content_wrapper' => '',
     'classes_content_header' => '',
     'classes_content' => '',
-    'classes_sidebar' => 'sidebar-dark-primary elevation-4',
-    'classes_sidebar_nav' => '',
-    'classes_topnav' => 'navbar-white navbar-light',
+    'classes_sidebar' => ' sidebar-dark-primary elevation-4 colorfondo',
+    'classes_sidebar_nav' => 'mt-5',
+    'classes_topnav' => 'navbar-primary navbar-light',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
 
@@ -233,85 +233,39 @@ return [
     'menu' => [
         [
             'text' => 'search',
-            'search' => true,
-            'topnav' => true,
+            'search' => false,
+            'topnav' => false,
         ],
         [
             'text' => 'blog',
             'url'  => 'admin/blog',
             'can'  => 'manage-blog',
         ],
+
         [
-            'text'        => 'pages',
-            'route'         => 'home',
+            'text'        => 'Almacen',
+            'route'       => 'home',
+            'icon'        => 'fas fa-boxes',
+        ],
+        [
+            'text'        => 'Comprobante',
+            'url'         => 'admin/blog',
+            'icon'        => 'fas fa-clipboard-list',
+        ],
+        [
+            'text'        => 'Depositos',
+            'url'         => 'admin/blog',
+            'icon'        => 'fas fa-truck-loading',
+        ],
+        [
+            'text'        => 'Prestamos',
+            'url'         => 'admin/blog',
+            'icon'        => 'far fa-clipboard',
+        ],
+        [
+            'text'        => 'Consultas',
+            'url'         => 'admin/blog',
             'icon'        => 'far fa-fw fa-file',
-            'label'       => 4,
-            'label_color' => 'success',
-        ],
-        ['header' => 'account_settings'],
-        [
-            'text' => 'profile',
-            'url'  => 'admin/settings',
-            'icon' => 'fas fa-fw fa-user',
-        ],
-        [
-            'text' => 'change_password',
-            'url'  => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
-        ],
-        [
-            'text'    => 'multilevel',
-            'icon'    => 'fas fa-fw fa-share',
-            'submenu' => [
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-                [
-                    'text'    => 'level_one',
-                    'url'     => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url'  => '#',
-                        ],
-                        [
-                            'text'    => 'level_two',
-                            'url'     => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-            ],
-        ],
-        ['header' => 'labels'],
-        [
-            'text'       => 'important',
-            'icon_color' => 'red',
-            'url'        => '#',
-        ],
-        [
-            'text'       => 'warning',
-            'icon_color' => 'yellow',
-            'url'        => '#',
-        ],
-        [
-            'text'       => 'information',
-            'icon_color' => 'cyan',
-            'url'        => '#',
         ],
     ],
 
@@ -396,7 +350,7 @@ return [
             ],
         ],
         'Sweetalert2' => [
-            'active' => true,
+            'active' => false,
             'files' => [
                 [
                     'type' => 'js',

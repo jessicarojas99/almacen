@@ -15,6 +15,9 @@ class CreateTicketDetailsTable extends Migration
     {
         Schema::create('ticket_details', function (Blueprint $table) {
             $table->id();
+            $table->integer('quantity');
+            $table->foreignId('ticket_id')->constrained('tickets');
+            $table->foreignId('warehouse_id')->constrained('warehouses');
             $table->timestamps();
         });
     }
