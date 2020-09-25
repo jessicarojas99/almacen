@@ -15,6 +15,9 @@ class CreateReceiptDetailsTable extends Migration
     {
         Schema::create('receipt_details', function (Blueprint $table) {
             $table->id();
+            $table->integer('quantity');
+            $table->foreignId('deposit_id')->constrained('deposits');
+            $table->foreignId('receipt_id')->constrained('receipts');
             $table->timestamps();
         });
     }
