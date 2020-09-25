@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Almacen')
+@section('title', 'Home')
 
 
 @section('content_header')
@@ -19,12 +19,5 @@
     </div>
 @stop
 @section('js')
-<script>
-    Swal.fire(
-  'Good job!',
-  'You clicked the button!',
-  'success'
-)
-</script>
 
 @endsection

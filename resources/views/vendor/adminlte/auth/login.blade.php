@@ -21,6 +21,7 @@
 @section('auth_header', __('adminlte::adminlte.login_message'))
 
 @section('auth_body')
+
     <form action="{{ $login_url }}" method="post">
         {{ csrf_field() }}
 
@@ -43,7 +44,7 @@
         {{-- Password field --}}
         <div class="input-group mb-3">
             <input type="password" name="password" class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}"
-                   placeholder="{{ __('adminlte::adminlte.password') }}">
+                   placeholder="Contraseña">
             <div class="input-group-append">
                 <div class="input-group-text">
                     <span class="fas fa-lock {{ config('adminlte.classes_auth_icon', '') }}"></span>
@@ -58,19 +59,20 @@
 
         {{-- Login field --}}
         <div class="row">
-            <div class="col-7">
+            {{--  <div class="col-7">
                 <div class="icheck-primary">
                     <input type="checkbox" name="remember" id="remember">
                     <label for="remember">{{ __('adminlte::adminlte.remember_me') }}</label>
                 </div>
-            </div>
+            </div>  --}}
             <div class="col-5">
-                <button type=submit class="btn btn-block {{ config('adminlte.classes_auth_btn', 'btn-flat btn-primary') }}">
+                <button type=submit class="btn btn-block bgVerde borderRadius{{ config('adminlte.classes_auth_btn', 'btn-flat btn-primary') }}">
                     <span class="fas fa-sign-in-alt"></span>
                     {{ __('adminlte::adminlte.sign_in') }}
                 </button>
             </div>
         </div>
+
 
     </form>
 @stop

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('vendor/adminlte/auth/login');
 });
 
 Auth::routes();

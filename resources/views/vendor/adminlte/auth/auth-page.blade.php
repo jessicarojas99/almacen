@@ -1,4 +1,5 @@
 @extends('adminlte::master')
+@section('title', 'Login')
 
 @php( $dashboard_url = View::getSection('dashboard_url') ?? config('adminlte.dashboard_url', 'home') )
 
@@ -16,13 +17,13 @@
 @section('classes_body'){{ ($auth_type ?? 'login') . '-page' }}@stop
 
 @section('body')
+
     <div class="{{ $auth_type ?? 'login' }}-box">
 
         {{-- Logo --}}
         <div class="{{ $auth_type ?? 'login' }}-logo">
             <a href="{{ $dashboard_url }}">
-                <img src="{{ asset(config('adminlte.logo_img')) }}" height="50">
-                {!! config('adminlte.logo', '<b>Admin</b>LTE') !!}
+                <img src="vendor/adminlte/dist/img/logoBlanco.png" class="imglogo">
             </a>
         </div>
 
@@ -39,7 +40,7 @@
             @endif
 
             {{-- Card Body --}}
-            <div class="card-body {{ $auth_type ?? 'login' }}-card-body {{ config('adminlte.classes_auth_body', '') }}">
+            <div class="card-body login {{ $auth_type ?? 'login' }}-card-body {{ config('adminlte.classes_auth_body', '') }}" style="margin-top: -100px">
                 @yield('auth_body')
             </div>
 
@@ -51,7 +52,11 @@
             @endif
 
         </div>
-
+        {{--  <div class="top-right links text-center">
+            @if (Route::has('register'))
+                <a href="{{ route('register') }}" class="registrolink">Registro</a>
+             @endif
+        </div>  --}}
     </div>
 @stop
 
