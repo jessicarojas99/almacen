@@ -121,14 +121,14 @@ return [
     */
 
     'classes_body' => '',
-    'classes_brand' => '',
-    'classes_brand_text' => '',
+    'classes_brand' => 'bgVerde',
+    'classes_brand_text' => 'bgVerde',
     'classes_content_wrapper' => '',
     'classes_content_header' => '',
     'classes_content' => '',
-    'classes_sidebar' => ' sidebar-dark-primary elevation-4 colorfondo',
+    'classes_sidebar' => ' sidebar-dark-white elevation-4 bgVerde',
     'classes_sidebar_nav' => 'mt-5',
-    'classes_topnav' => 'navbar-primary navbar-light',
+    'classes_topnav' => 'navbar-white navbar-light',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
 
