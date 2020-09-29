@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
+use Yajra\DataTables\Facades\DataTables;
 use App\Warehouse;
 use Illuminate\Http\Request;
 
@@ -15,6 +17,15 @@ class WarehouseController extends Controller
     public function index()
     {
         //
+        $usersitos = User::all();
+        return view('warehouse.index')->with('userss', $usersitos);
+    }
+
+    public function list()
+    {
+        //
+        $users = User::select('id', 'name', 'email')->get();
+        return datatables()->of($users)->toJson();
     }
 
     /**
