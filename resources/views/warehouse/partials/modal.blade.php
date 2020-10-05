@@ -6,12 +6,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                 {{-- header --}}
-                <h5 class="modal-title" id="exampleModalLabel">Registrar</h5>
+                <h5 class="modal-title" id="modalTitle">Registrar</h5>
                 {{-- Boton cerrar --}}
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 </div>
+                {{-- input para editar id --}}
+                <input type="hidden" id="txtId" >
                 {{-- Contenido --}}
                 <div class="modal-body">
                     <div class="form-group">
@@ -35,7 +37,7 @@
                         </div>
                         <div class="form-group col">
                             <label for="txtQuantity"><span style="color: red">*</span>Cantidad</label>
-                            <input type="text" class="form-control" id="txtQuantity" placeholder="1">
+                            <input type="number" class="form-control" id="txtQuantity" min="1" value="1">
                         </div>
                     </div>
                     <div class="form-group">
@@ -45,7 +47,7 @@
                 </div>
                 {{-- Botones footer --}}
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary btn-sm">Guardar</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Guardar</button>
                 </div>
             </div>
         </div>
