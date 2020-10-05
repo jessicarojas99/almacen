@@ -264,7 +264,7 @@ return [
         ],
         [
             'text'        => 'Consultas',
-            'url'         => 'admin/blog',
+            'route'         => 'consultas',
             'icon'        => 'far fa-fw fa-file',
         ],
     ],

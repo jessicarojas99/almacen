@@ -34,3 +34,5 @@ Route::post('/almacen/registro', 'WarehouseController@store')->name('almacenStor
 Route::get('/almacen/eliminar/{id}', 'WarehouseController@destroy')->name('almacenDelete');
 Route::get('/almacen/editar/{id}', 'WarehouseController@edit')->name('almacenEdit');
 Route::post('/almacen/actualizar', 'WarehouseController@update')->name('almacenUpdate');
+Route::get('/consulta', 'ReportsController@index')->name('consultas');
+Route::get('/consulta-pdf', 'ReportsController@consultarusers')->name('consultasuser');
