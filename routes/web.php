@@ -21,8 +21,16 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+
 Auth::routes();
 
-Route::get('/home', function() {
+Route::get('/home', function () {
     return view('home');
 })->name('home')->middleware('auth');
+
+Route::get('/almacen', 'WarehouseController@index')->name('almacen');
+Route::get('/almacen/lista', 'WarehouseController@list')->name('almacenList');
+Route::post('/almacen/registro', 'WarehouseController@store')->name('almacenStore');
+Route::get('/almacen/eliminar/{id}', 'WarehouseController@destroy')->name('almacenDelete');
+Route::get('/almacen/editar/{id}', 'WarehouseController@edit')->name('almacenEdit');
+Route::post('/almacen/actualizar', 'WarehouseController@update')->name('almacenUpdate');
