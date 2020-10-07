@@ -4,12 +4,6 @@
 
 @section('css')
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.6/css/responsive.bootstrap4.min.css">
-    <style>
-        table.dataTable tbody tr.selected {
-            color: white;
-            background-color: #eeeeee;  /* Not working */
-        }
-    </style>
 @endsection
 
 @section('content_header')
@@ -30,6 +24,7 @@
                                 <th>Marca</th>
                                 <th>Codigo</th>
                                 <th>Cantidad</th>
+                                <th>Fecha de creación</th>
                             </tr>
                         </thead>
 
@@ -67,7 +62,8 @@
                 {data: 'item'},
                 {data: 'brand'},
                 {data: 'code'},
-                {data: 'quantity'}
+                {data: 'quantity'},
+                {data: 'created_at'}
             ]
 
         } );
@@ -142,7 +138,13 @@
                     }
                 });
             }
+        });
+
+        $('#close').click(function () {
+            $('#warehouseForm')[0].reset();
         })
+
+        
     });
 
 </script>
