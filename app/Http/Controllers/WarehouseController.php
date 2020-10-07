@@ -23,7 +23,7 @@ class WarehouseController extends Controller
     public function list()
     {
         //
-        $warehouse = Warehouse::select('id', 'item', 'brand', 'code', 'quantity')->get();
+        $warehouse = Warehouse::select('id', 'item', 'brand', 'code', 'quantity', 'created_at')->get();
         return datatables()->of($warehouse)->toJson();
     }
 
