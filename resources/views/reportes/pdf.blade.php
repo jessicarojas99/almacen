@@ -41,6 +41,20 @@
             opacity: 0.5;
 
         }
+        #tabla{
+            margin: auto;
+            margin-top: 5%;
+            border:1px solid;
+        }
+        #titulo{
+            text-align: center;
+            margin:60px;
+        }
+        th, td{
+            border:1px solid;
+            padding: 0.3em;
+            width: 25%;
+        }
 
     </style>
     <img src="vendor/adminlte/dist/img/LogoColor.png" alt="logoende">
@@ -50,5 +64,37 @@
         <span class="span2">03:01 pm </span>
     <div class="header">
       </div>
+      <h1 id="titulo">Tabla</h1>
+      <p>Codigo</p>
+      <p>Reserva</p>
+      <table id="tabla">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Item</th>
+                <th>Marca</th>
+                <th>Codigo</th>
+                <th>Cantidad</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($warehouse as $item)
+            <tr>
+
+                <td>{{$item->id}}</td>
+                <td>{{$item->item}}</td>
+                <td>{{$item->brand}}</td>
+                <td>{{$item->code}}</td>
+                <td>{{$item->quantity}}</td>
+            @empty
+            <td class=" list-group-item border-0 ">
+                No existen datos para mostrar
+            </td>
+            @endforelse
+            </tr>
+        </tbody>
+
+    </table>
+
 </body>
 </html>

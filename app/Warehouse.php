@@ -23,4 +23,24 @@ class Warehouse extends Model
     {
         return $this->belongsTo(Brand::class);
     }
+    public function scopeWhereItem($query,$item){
+        if($item && $item !== 'all'){
+            return $query->where('item', '=', $item);
+        }
+    }
+    public function scopeWhereBrand($query,$brand){
+        if($brand && $brand !== 'all'){
+            return $query->where('brand', '=', $brand);
+        }
+    }
+    public function scopeWhereFechaInicio($query,$brand){
+        if($brand && $brand !== 'all'){
+            return $query->where('brand', '=', $brand);
+        }
+    }
+    public function scopeWhereFechaFIn($query,$brand){
+        if($brand && $brand !== 'all'){
+            return $query->where('brand', '=', $brand);
+        }
+    }
 }
