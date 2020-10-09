@@ -17,10 +17,12 @@ class CreateWarehousesTable extends Migration
             $table->id();
             $table->string('item');
             $table->string('description');
-            $table->string('brand');
             $table->string('code');
             $table->string('color');
             $table->integer('quantity');
+            $table->string('reason')->nullable();
+            $table->softDeletes();
+            $table->foreignId('brand_id')->constrained('brands');
             $table->timestamps();
         });
     }

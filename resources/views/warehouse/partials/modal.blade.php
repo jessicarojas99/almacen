@@ -23,7 +23,12 @@
                     <div class="form-row">
                         <div class="form-group col">
                             <label for="txtBrand"><span style="color: red">*</span>Marca</label>
-                            <input type="text" class="form-control" id="txtBrand" placeholder="Introduzca la marca">
+                            <select id="txtBrand" class="form-control">
+                              <option selected>Seleccion una marca</option>
+                              @foreach ($brands as $branditem)
+                                  <option value="{{$branditem->id}}">{{$branditem->name}}</option>
+                              @endforeach
+                            </select>
                         </div>
                         <div class="form-group col">
                             <label for="txtCode"><span style="color: red">*</span>Codigo</label>
