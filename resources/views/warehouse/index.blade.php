@@ -40,7 +40,7 @@
 <script>
     $(document).ready(function() {
         $('#warehouseTable').DataTable( {
-            dom:    
+            dom:
                         "<'row'<'col-md-8 crud-buttons'B><'col-md-4'f>>" +
                         "<'row'<'col-sm-12 col-12'<'#tableScroll.scrollable-table table-responsive't><'p-5'r>>>" +
                         "<'row custom-pagination'<'col-sm-12 col-md-4 mt-3'l><'col-sm-12 col-md-4 text-center align-self-center'i><'col-sm-12 col-md-4 mt-3'p>>",
@@ -60,7 +60,7 @@
             "columns":[
                 {data: 'id'},
                 {data: 'item'},
-                {data: 'brand'},
+                {data: 'brand_id'},
                 {data: 'code'},
                 {data: 'quantity'},
                 {data: 'created_at'}
@@ -71,7 +71,7 @@
         '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#warehouseModal"><i class="fas fa-pen"></i>  Registrar</button>'+
         '&nbsp;&nbsp;<button type="button" class="btn btn-warning btn-sm" id="btnEdit" name="edit" disabled><i class="fas fa-edit"></i> Editar</button>'+
         '&nbsp;&nbsp;<button type="button" class="btn btn-danger btn-sm" id="btnDelete" name="delete" disabled><i class="fas fa-trash"></i> Eliminar</button>');
-        
+
         var table = $('#warehouseTable').DataTable();
         // Tomar id y aplicar estilo a la fila
         var idRow
@@ -98,25 +98,51 @@
                 confirmButtonText: 'Si, eliminar!',
                 cancelButtonText: 'Cancelar',
                 }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url:"/almacen/eliminar/"+idRow,
-                            success:function(data){
-                                Swal.fire({
-                                    title:'Eliminado!',
-                                    text:'El item fue eliminado con exito',
-                                    icon:'success',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                }
-                                )
-                                $('#warehouseTable').DataTable().ajax.reload();
+                    if (result.isConfirmed){
+                        Swal.fire({
+                            html: `
+                            <textarea class="form-control" id="txtMotivo" rows="3" placeholder="Introduzca una descripcion"></textarea>
+                            `,
+                            confirmButtonText: 'Confirm',
+                            // ...
+                            showCancelButton: true,
+                            preConfirm: function() {
+                                return new Promise((resolve, reject) => {
+                                    // get your inputs using their placeholder or maybe add IDs to them
+                                    resolve({
+                                        Motivo: $('#txtMotivo').val()
+
+                                    });
+
+                                    // maybe also reject() on some condition
+                                });
                             }
+                        }).then((data) => {
+                            // your input data object will be usable from here
+                            console.log(data.value.Motivo);
+                            $.ajax({
+                                url:"/almacen/eliminar/"+idRow,
+                                data:
+                                {
+                                    motivo:data.value.Motivo
+                                },
+                                success:function(data){
+                                    Swal.fire({
+                                        title:'Eliminado!',
+                                        text:'El item fue eliminado con exito',
+                                        icon:'success',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                        }
+                                    )
+                                    $('#warehouseTable').DataTable().ajax.reload();
+                                }
+                            });
                         });
                     }
-                });
+                 });
             }
-            
+
         });
 
         // Editar
@@ -127,7 +153,7 @@
                     success:function(data){
                         document.getElementById("txtId").value =data[0].id;
                         document.getElementById("txtItem").value =data[0].item;
-                        document.getElementById("txtBrand").value =data[0].brand;
+                        document.getElementById("txtBrand").value =data[0].brand_id;
                         document.getElementById("txtCode").value =data[0].code;
                         document.getElementById("txtDescription").value =data[0].description;
                         document.getElementById("txtColor").value =data[0].color;
@@ -144,7 +170,7 @@
             $('#warehouseForm')[0].reset();
         })
 
-        
+
     });
 
 </script>
@@ -155,7 +181,7 @@
         e.preventDefault();
         var id=$('#txtId').val();
         var item=$('#txtItem').val();
-        var brand=$('#txtBrand').val();
+        var brand = $("#txtBrand").val(); // Capturamos el valor del select
         var code=$('#txtCode').val();
         var color=$('#txtColor').val();
         var quantity=$('#txtQuantity').val();
@@ -205,11 +231,11 @@
                 type: "POST",
                 data:{
                     item:item,
-                    brand:brand,
                     code:code,
                     color:color,
                     quantity:quantity,
                     description:description,
+                    brand:brand,
                     _token:_token
                 },
                 success:function (response) {

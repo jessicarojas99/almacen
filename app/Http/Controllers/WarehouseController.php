@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Brand;
 use App\User;
 use Yajra\DataTables\Facades\DataTables;
 use App\Warehouse;
@@ -16,14 +17,14 @@ class WarehouseController extends Controller
      */
     public function index()
     {
-        //
-        return view('warehouse.index');
+        $brands=Brand::all();
+        return view('warehouse.index', compact('brands'));
     }
 
     public function list()
     {
         //
-        $warehouse = Warehouse::select('id', 'item', 'brand', 'code', 'quantity', 'created_at')->get();
+        $warehouse = Warehouse::select('id', 'item', 'brand_id', 'code', 'quantity', 'created_at')->get();
         return datatables()->of($warehouse)->toJson();
     }
 
@@ -50,11 +51,11 @@ class WarehouseController extends Controller
         // return $this->successResponse('Organismo financiador creado');
         $storage = new Warehouse();
         $storage->item = $request->item;
-        $storage->brand = $request->brand;
         $storage->code = $request->code;
         $storage->color = $request->color;
         $storage->quantity = $request->quantity;
         $storage->description = $request->description;
+        $storage->brand_id = $request->brand;
         $storage->saveOrFail();
         return back();
     }
@@ -93,7 +94,7 @@ class WarehouseController extends Controller
     {
         $item = Warehouse::find($request->id);
         $item->item = $request->item;
-        $item->brand = $request->brand;
+        $item->brand_id = $request->brand;
         $item->code = $request->code;
         $item->color = $request->color;
         $item->quantity = $request->quantity;
@@ -108,9 +109,13 @@ class WarehouseController extends Controller
      * @param  \App\Warehouse  $warehouse
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id,Request $request)
     {
-        Warehouse::destroy($id);
+        $item = Warehouse::find($id);
+        $item->reason = $request->motivo;
+        $item->saveOrFail();
+        $item->delete();
+       //Warehouse::destroy($id);
         return back();
     }
 }
