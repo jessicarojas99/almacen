@@ -36,6 +36,6 @@ Route::get('/almacen/editar/{id}', 'WarehouseController@edit')->name('almacenEdi
 Route::post('/almacen/actualizar', 'WarehouseController@update')->name('almacenUpdate');
 
 Route::get('/consulta', 'ReportsController@index')->name('consultas');
-Route::get('/consulta-pdf', 'ReportsController@consultarusers')->name('consultasuser');
+Route::post('consulta-pdf', 'ReportsController@reportespdf')->name('pdf');
 Route::get('/consultas', 'ReportsController@consulta')->name('consultasgral');
 Route::get('/consultasdeposit', 'ReportsController@consultadeposito')->name('consultadeposit');

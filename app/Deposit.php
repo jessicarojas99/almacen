@@ -17,4 +17,5 @@ class Deposit extends Model
             return $query->where('brand', '=', $brand);
         }
     }
+
 }

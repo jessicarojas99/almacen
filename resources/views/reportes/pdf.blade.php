@@ -8,84 +8,100 @@
 </head>
 <body>
     <style>
+        body
+        {
+            font-family: Arial, Helvetica, sans-serif;;
+            line-height: 1.25;
+        }
         img{
             width: 40%;
             position: absolute;
         }
         h3{
             text-align: center;
-            margin-left: 200px;
+            margin-left: 230px;
             color: #000000;
         }
         .span1{
-            margin-left: 280px;
+            margin-left: 420px;
         }
-        .span2{
-            margin-left: 200px;
-        }
+
         .header {
             position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
             background: #beb9b9b0;
-            color:#fff;
-            z-index: 1000;
             height: 120px;
-            overflow: hidden;
-            -webkit-transition: height 0.3s;
-            -moz-transition: height 0.3s;
-            transition: height 0.3s;
             text-align:center;
-            line-height:160px;
             opacity: 0.5;
+        }
 
-        }
-        #tabla{
-            margin: auto;
-            margin-top: 5%;
-            border:1px solid;
-        }
         #titulo{
             text-align: center;
             margin:60px;
         }
-        th, td{
-            border:1px solid;
-            padding: 0.3em;
-            width: 25%;
-        }
+        table {
+            border: 1px solid rgb(19, 18, 18);
+            border-collapse: collapse;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            table-layout: fixed;
+          }
+
+          table tr {
+            border: 1px solid rgb(19, 18, 18);
+            padding: .35em;
+          }
+
+          table th,
+          table td {
+            padding: .625em;
+            border: 1px solid rgb(19, 18, 18);
+            text-align: center;
+          }
+
+          table th {
+            font-size: .85em;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            background-color: #11505d;
+            color: #fff;
+          }
 
     </style>
-    <img src="vendor/adminlte/dist/img/LogoColor.png" alt="logoende">
+    <!-- Creating a SVG image -->
 
+    <img src="vendor/adminlte/dist/img/LogoColor.png" alt="logoende">
         <h3>Ende Andina S.A.M.</h3>
-        <span class="span1">02/10/2020 </span>
-        <span class="span2">03:01 pm </span>
+
+        <span class="span1">{{$now->toDateString()}}</span>
+
     <div class="header">
       </div>
-      <h1 id="titulo">Tabla</h1>
-      <p>Codigo</p>
-      <p>Reserva</p>
+      <h1 id="titulo">Reporte</h1>
+      <div class="" style="margin-top: -5%">
+          <p>Codigo: </p>
+          <p>Solicitante: </p>
+      </div>
       <table id="tabla">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Item</th>
                 <th>Marca</th>
                 <th>Codigo</th>
                 <th>Cantidad</th>
+                <th>Fecha</th>
             </tr>
         </thead>
         <tbody>
             @forelse($warehouse as $item)
             <tr>
 
-                <td>{{$item->id}}</td>
                 <td>{{$item->item}}</td>
-                <td>{{$item->brand}}</td>
+                <td>{{$item->Bname}}</td>
                 <td>{{$item->code}}</td>
                 <td>{{$item->quantity}}</td>
+                <td>{{$item->Wcreated}}</td>
             @empty
             <td class=" list-group-item border-0 ">
                 No existen datos para mostrar

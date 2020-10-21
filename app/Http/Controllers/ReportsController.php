@@ -2,39 +2,50 @@
 
 namespace App\Http\Controllers;
 
+use App\Brand;
 use App\Deposit;
 use App\User;
 use App\Warehouse;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Support\Carbon;
 
 class ReportsController extends Controller
 {
     public function index()
     {
-        return view('reportes/consultas');
+        $brands=Brand::all();
+        return view('reportes/consultas', compact('brands'));
     }
-    public function consultarusers()
+
+    public function reportespdf(Request $request)
     {
-        $warehouse = Warehouse::select('id', 'item', 'brand', 'code', 'quantity')->get();
-        $pdf= PDF::loadView('reportes.pdf',compact('warehouse'));
-        return $pdf->stream('user-list.pdf');
+        $warehouse = Warehouse::join("brands","warehouses.brand_id","=","brands.id")
+        ->select('item', 'brands.name as Bname', 'code', 'quantity','warehouses.created_at as Wcreated')
+        ->whereItem($request->item)
+        ->whereBrand($request->marca)
+        ->whereFrom($request->fechainicio)
+        ->whereTo($request->fechafin)
+        ->get();
+        $now=Carbon::now();
+        $pdf= PDF::loadView('reportes.pdf',compact('warehouse','now'));
+        return $pdf->stream('reporte.pdf');
+       // $pdf->stream('user-list.pdf');
 
     }
     public function consulta(Request $request)
     {
 
         if(request()->ajax()){
-            if(!empty($request->brand))
-            {
-                $warehouse = Warehouse::select('id', 'item', 'brand', 'code', 'quantity')
+
+                $warehouse = Warehouse::join("brands","warehouses.brand_id","=","brands.id")
+                ->select('warehouses.id as Wid', 'item', 'brands.name as Bname', 'code', 'quantity','warehouses.created_at as Wcreated')
                 ->whereItem($request->item)
                 ->whereBrand($request->brand)
+                ->whereFrom($request->fromdate)
+                ->whereTo($request->todate)
+                ->whereQuantity($request->quantity)
                 ->get();
-            }
-            else{
-                $warehouse = Warehouse::select('id', 'item', 'brand', 'code', 'quantity')->get();
-            }
             return datatables()->of($warehouse)->toJson();
         }
 
@@ -42,15 +53,12 @@ class ReportsController extends Controller
     public function consultadeposito(Request $request)
     {
         if(request()->ajax()){
-            if(!empty($request->brand)){
+
                 $deposit= Deposit::select('id', 'item', 'brand', 'code', 'size','state')
                 ->whereItem($request->item)
                 ->whereBrand($request->brand)
                 ->get();
-            }
-            else{
-                $deposit= Deposit::select('id', 'item', 'brand', 'code', 'size','state')->get();
-            }
+
             return datatables()->of($deposit)->toJson();
         }
     }

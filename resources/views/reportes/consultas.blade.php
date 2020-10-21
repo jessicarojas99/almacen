@@ -12,7 +12,8 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <form>
+                    <form method="POST" action="{{ route('pdf') }}" target="_blank">
+                        @csrf
                         <div class="form-row">
                           <div class="form-group col-md-6">
                             <label for="tipo">De:</label>
@@ -40,7 +41,12 @@
                           </div>
                           <div class="form-group col-md-6">
                                 <label for="marca">Marca:</label>
-                                <input type="text" class="form-control" id="marca" name="marca">
+                                <select id="marca" class="form-control" name="marca">
+                                    <option value="" selected>Seleccion una marca</option>
+                                    @foreach ($brands as $branditem)
+                                        <option value="{{$branditem->id}}">{{$branditem->name}}</option>
+                                    @endforeach
+                                  </select>
                             </div>
                         </div>
                         <div class="form-row">
@@ -57,10 +63,10 @@
                                 <input type="text" class="form-control" id="cantidad" name="cantidad" disabled>
                               </div>
                           </div>
-                          <button type="button" class="btn btn-danger float-right" id="consultar" name="consultar">
-                              Consultar</button>
-                          <a href="{{ route('consultasuser') }}" type="submit" target="blank" class="btn btn-info float-right">
-                               Imprimir reporte</a>
+                          <button type="button" class="btn btn-warning float-right m-2" id="consultar" name="consultar" disabled>
+                            <i class="fas fa-search"></i></button>
+                          <button  class="btn btn-success float-right m-2" id="imprimir" disabled>
+                            <i class="fas fa-print"></i>  </button>
                       </form>
 
                 </div>
@@ -95,6 +101,7 @@
                                 <th>Marca</th>
                                 <th>Codigo</th>
                                 <th>Cantidad</th>
+                                <th>Fecha</th>
                             </tr>
                         </thead>
 
@@ -108,53 +115,88 @@
 @section('js')
 <script>
         $(document).ready(function() {
-
             consulta_datatable();
-            function consulta_datatable(item='', brand=''){
+            deposito_datatable();
+            function consulta_datatable(item='', brand='',fromdate='', todate='', quantity=''){
 
                 var datatable=$('#consultasTable').DataTable({
+                    dom:
+                    "<'row'<'col-md-8 crud-buttons'B><'col-md-4'f>>" +
+                    "<'row'<'col-sm-12 col-12'<'#tableScroll.scrollable-table table-responsive't><'p-5'r>>>" +
+                    "<'row custom-pagination'<'col-sm-12 col-md-4 mt-3'l><'col-sm-12 col-md-4 text-center align-self-center'i><'col-sm-12 col-md-4 mt-3'p>>",
+                    "language":
+                    {
+                        "lengthMenu": "Mostrar _MENU_ registros por pagina",
+                        "zeroRecords": "Nada encontrado - disculpa",
+                        "info": "Mostrando pagina _PAGE_ de _PAGES_",
+                        "infoEmpty": "No existe informacion disponible",
+                        "infoFiltered": "(filtrado de _MAX_ registros totales)",
+                        "search": "Buscar:",
+                        "paginate":{
+                            "next":"Siguiente",
+                            "previous":"Anterior"
+                        }
+                    },
                     processing: true,
                     serverSide:true,
                     ajax:{
                         url: "{{route('consultasgral')}}",
                         data:
                             {
+                                item:item,
+                                brand:brand,
+                                fromdate:fromdate,
+                                todate:todate,
+                                quantity:quantity
+                            }
+                    },
+                    columns:[
+                            {data: 'Wid'},
+                            {data: 'item'},
+                            {data: 'Bname'},
+                            {data: 'code'},
+                            {data: 'quantity'},
+                            {data: 'Wcreated'}
+                        ]
+                });
+            }
+            function deposito_datatable(item='', brand=''){
 
+                var datatable=$('#DepositTable').DataTable({
+                    dom:
+                    "<'row'<'col-md-8 crud-buttons'B><'col-md-4'f>>" +
+                    "<'row'<'col-sm-12 col-12'<'#tableScroll.scrollable-table table-responsive't><'p-5'r>>>" +
+                    "<'row custom-pagination'<'col-sm-12 col-md-4 mt-3'l><'col-sm-12 col-md-4 text-center align-self-center'i><'col-sm-12 col-md-4 mt-3'p>>",
+                    "language":
+                    {
+                        "lengthMenu": "Mostrar _MENU_ registros por pagina",
+                        "zeroRecords": "Nada encontrado - disculpa",
+                        "info": "Mostrando pagina _PAGE_ de _PAGES_",
+                        "infoEmpty": "No existe informacion disponible",
+                        "infoFiltered": "(filtrado de _MAX_ registros totales)",
+                        "search": "Buscar:",
+                        "paginate":{
+                            "next":"Siguiente",
+                            "previous":"Anterior"
+                        }
+                    },
+                    processing: true,
+                    serverSide:true,
+                    ajax:{
+                        url: "{{route('consultadeposit')}}",
+                        data:
+                        {
                             item:item,
                             brand:brand
-                            }
+                        }
                     },
                     columns:[
                             {data: 'id'},
                             {data: 'item'},
                             {data: 'brand'},
                             {data: 'code'},
-                            {data: 'quantity'}
-                        ]
-                });
-            }
-            function deposito_datatable(){
-                var datatable=$('#DepositTable').DataTable({
-                    processing: true,
-                    ajax:{
-                        url: "{{route('consultadeposit')}}",
-                        data: function(d)
-                        {
-                            if($('#item').val()){
-                                d.item=('#item').value;
-                            }
-                            if($('#brand').val()){
-                                d.item=('#brand').value;
-                            }
-                        }
-                    },
-                    columns:[
-                            {data: 'id', name: 'id'},
-                            {data: 'item', name: 'item'},
-                            {data: 'brand', name: 'brand'},
-                            {data: 'code', name: 'code'},
-                            {data: 'size', name: 'size'},
-                            {data: 'state', name: 'state'}
+                            {data: 'size'},
+                            {data: 'state'}
                         ]
                 });
             }
@@ -162,19 +204,24 @@
                 var tipo= $('#tipo').val();
                 var item=$('#item').val();
                 var brand = $('#marca').val();
+                var fromdate= $('#fechainicio').val();
+                console.log(fromdate);
+                var todate = $('#fechafin').val();
+                var quantity = $('#cantidad').val();
+
                 var tabla1 = document.getElementById('deposito');
                 var tabla = document.getElementById('almacen');
                 if(tipo==1)
                  {
                      $('#consultasTable').DataTable().destroy();
-                     consulta_datatable(item,brand);
+                     consulta_datatable(item,brand,fromdate,todate,quantity);
                      tabla.style.display = '';
                      tabla1.style.display = 'none';
                  }
                  else if(tipo==2)
                  {
                     $('#DepositTable').DataTable().destroy();
-                     deposito_datatable();
+                     deposito_datatable(item,brand);
                      tabla1.style.display = '';
                      tabla.style.display = 'none';
                  }
@@ -186,27 +233,34 @@
             });
 
         });
-
       function ShowSelected()
       {
-        var cod = document.getElementById("tipo").value;
+        var tipo = document.getElementById("tipo").value;
         var cantidad= document.getElementById('cantidad');
         var estado= document.getElementById('estado');
-
-        if(cod==1)
+        if(tipo==1)
         {
           cantidad.disabled = false;
+          document.getElementById("consultar").disabled = false;
+          document.getElementById("imprimir").disabled = false;
+
         }
-        else{
-          cantidad.disabled = true;
-        }
-        if(cod==2)
+        else  if(tipo==2)
         {
           estado.disabled = false;
+          cantidad.disabled = true;
+          document.getElementById("consultar").disabled = false;
+          document.getElementById("imprimir").disabled = false;
+
         }
         else{
           estado.disabled = true;
+          cantidad.disabled = true;
+          document.getElementById("consultar").disabled = true;
+          document.getElementById("imprimir").disabled = true;
+
         }
       }
+
     </script>
 @endsection

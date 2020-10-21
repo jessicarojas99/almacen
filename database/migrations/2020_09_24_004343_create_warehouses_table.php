@@ -23,7 +23,8 @@ class CreateWarehousesTable extends Migration
             $table->string('reason')->nullable();
             $table->softDeletes();
             $table->foreignId('brand_id')->constrained('brands');
-            $table->timestamps();
+            $table->date('created_at');
+            $table->date('updated_at');
         });
     }
 

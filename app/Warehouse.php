@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 class Warehouse extends Model
 {
@@ -15,32 +16,44 @@ class Warehouse extends Model
     protected $fillable = [
         'item', 'description', 'brand', 'code', 'color', 'quantity'
     ];
-    protected $casts = [
-        'created_at' => 'datetime:d-m-Y',
-    ];
+    public function getCreatedAtAttribute($date)
+    {
+        return Carbon::parse($date)->format('Y-m-d');
+    }
 
+    public function getUpdatedAtAttribute($date)
+    {
+        return Carbon::parse($date)->format('Y-m-d');
+    }
     public function brands()
     {
         return $this->belongsTo(Brand::class);
     }
     public function scopeWhereItem($query,$item){
-        if($item && $item !== 'all'){
+        if($item){
             return $query->where('item', '=', $item);
         }
     }
     public function scopeWhereBrand($query,$brand){
-        if($brand && $brand !== 'all'){
-            return $query->where('brand', '=', $brand);
+        if($brand){
+            return $query->where('brand_id', '=', $brand);
         }
     }
-    public function scopeWhereFechaInicio($query,$brand){
-        if($brand && $brand !== 'all'){
-            return $query->where('brand', '=', $brand);
+    public function scopeWhereFrom($query,$fromdate){
+        if($fromdate){
+
+            return $query->where('created_at', '>=', $fromdate);
         }
     }
-    public function scopeWhereFechaFIn($query,$brand){
-        if($brand && $brand !== 'all'){
-            return $query->where('brand', '=', $brand);
+    public function scopeWhereTo($query,$todate){
+        if($todate){
+
+            return $query->where('created_at', '<=', $todate);
+        }
+    }
+    public function scopeWhereQuantity($query,$quantity){
+        if($quantity){
+            return $query->where('quantity', '=', $quantity);
         }
     }
 }
