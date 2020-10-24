@@ -14,7 +14,7 @@ class Warehouse extends Model
     //protected $dates=['deleted_at'];
 
     protected $fillable = [
-        'item', 'description', 'brand', 'code', 'color', 'quantity'
+        'item', 'description', 'brand_id', 'code', 'color', 'quantity', 'reason'
     ];
     public function getCreatedAtAttribute($date)
     {

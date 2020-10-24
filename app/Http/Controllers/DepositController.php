@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Brand;
 use App\Deposit;
 use Illuminate\Http\Request;
 
@@ -15,18 +16,30 @@ class DepositController extends Controller
     public function index()
     {
         //
+        $brands = Brand::all();
+        return view('deposit.index', compact('brands'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function list()
     {
         //
+        $deposit = Deposit::join("brands", "deposits.brand_id", "=", "brands.id")
+            ->select('deposits.id as Did', 'item', 'brands.name as Bname', 'code', 'state', 'deposits.created_at as Dcreated')->get();
+        return Datatables()->of($deposit)
+            ->editColumn('state', function ($deposit) {
+                if ($deposit->state == 1) {
+                    return "Disponible";
+                } else {
+                    return "No disponible";
+                }
+            })
+            ->addColumn('action', function ($deposit) {
+                $acciones = '<a href="javascript:void(0)" onclick="showItem(' . $deposit->Did . ')" class="btn btn-info btn-sm"><i class="fas fa-info-circle"></i> Info</a>';
+                return $acciones;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -35,7 +48,17 @@ class DepositController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $storage = new Deposit();
+        $storage->item = $request->item;
+        $storage->code = $request->code;
+        $storage->size = $request->size;
+        $storage->processor = $request->processor;
+        $storage->condition = $request->condition;
+        $storage->state = $request->state;
+        $storage->description = $request->description;
+        $storage->brand_id = $request->brand;
+        $storage->saveOrFail();
+        return back();
     }
 
     /**
@@ -55,9 +78,10 @@ class DepositController extends Controller
      * @param  \App\Deposit  $deposit
      * @return \Illuminate\Http\Response
      */
-    public function edit(Deposit $deposit)
+    public function edit($id)
     {
-        //
+        $item = Deposit::where("deposits.id", "=", $id)->get();
+        return response()->json($item);
     }
 
     /**
@@ -69,7 +93,17 @@ class DepositController extends Controller
      */
     public function update(Request $request, Deposit $deposit)
     {
-        //
+        $item = Deposit::find($request->id);
+        $item->item = $request->item;
+        $item->code = $request->code;
+        $item->size = $request->size;
+        $item->processor = $request->processor;
+        $item->condition = $request->condition;
+        $item->state = $request->state;
+        $item->description = $request->description;
+        $item->brand_id = $request->brand;
+        $item->saveOrFail();
+        return back();
     }
 
     /**
@@ -78,8 +112,12 @@ class DepositController extends Controller
      * @param  \App\Deposit  $deposit
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Deposit $deposit)
+    public function destroy($id, Request $request)
     {
-        //
+        $item = Deposit::find($id);
+        $item->reason = $request->motivo;
+        $item->saveOrFail();
+        $item->delete();
+        return back();
     }
 }

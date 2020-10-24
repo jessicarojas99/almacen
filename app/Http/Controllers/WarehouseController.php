@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Brand;
-use App\User;
-use Yajra\DataTables\Facades\DataTables;
+use App\Record;
+use DataTables;
 use App\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -18,26 +18,23 @@ class WarehouseController extends Controller
      */
     public function index()
     {
-        $brands=Brand::all();
+        $brands = Brand::all();
         return view('warehouse.index', compact('brands'));
     }
 
     public function list()
     {
         //
-        $warehouse = Warehouse::select('id', 'item', 'brand_id', 'code', 'quantity','created_at')->get();
-
-        return datatables()->of($warehouse)->toJson();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $warehouse = Warehouse::join("brands", "warehouses.brand_id", "=", "brands.id")
+            ->select('warehouses.id as Wid', 'item', 'brands.name as Bname', 'code', 'quantity', 'warehouses.created_at as Wcreated')->get();
+        return Datatables()->of($warehouse)
+            ->addColumn('action', function ($warehouse) {
+                $acciones = '<a href="javascript:void(0)" onclick="showItem(' . $warehouse->Wid . ')" class="btn btn-info btn-sm"><i class="fas fa-info-circle"></i> Info</a>';
+                return $acciones;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+        // return datatables()->of($warehouse)->toJson();
     }
 
     /**
@@ -48,17 +45,18 @@ class WarehouseController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        // Warehouse::create($request->all());
-        // return $this->successResponse('Organismo financiador creado');
         $storage = new Warehouse();
-        $storage->item =ucfirst($request->item);
+        $storage->item = ucfirst($request->item);
         $storage->code = strtoupper($request->code);
         $storage->color = ucfirst($request->color);
         $storage->quantity = $request->quantity;
         $storage->description = ucfirst($request->description);
         $storage->brand_id = $request->brand;
         $storage->saveOrFail();
+        $rec = new Record();
+        $rec->warehouse_id = $storage->id;
+        $rec->quantity = $storage->quantity;
+        $rec->saveOrFail();
         return back();
     }
 
@@ -68,9 +66,15 @@ class WarehouseController extends Controller
      * @param  \App\Warehouse  $warehouse
      * @return \Illuminate\Http\Response
      */
-    public function show(Warehouse $warehouse)
+    public function show($id)
     {
-        //
+        $item = Record::join("warehouses", "records.warehouse_id", "=", "warehouses.id")
+            ->join("brands", "warehouses.brand_id", "=", "brands.id")
+            ->select("warehouses.item", "brands.name as Bname", "warehouses.code", "warehouses.quantity", "records.quantity as Rquantity", "records.created_at as Rdate")
+            ->where("records.warehouse_id", "=", $id)
+            ->get();
+        // $item = Record::where("records.warehouse_id", "=", $id)->get();
+        return response()->json($item);
     }
 
     /**
@@ -102,6 +106,10 @@ class WarehouseController extends Controller
         $item->quantity = $request->quantity;
         $item->description = ucfirst($request->description);
         $item->saveOrFail();
+        $rec = new Record();
+        $rec->warehouse_id = $item->id;
+        $rec->quantity = $item->quantity;
+        $rec->saveOrFail();
         return back();
     }
 
@@ -111,13 +119,12 @@ class WarehouseController extends Controller
      * @param  \App\Warehouse  $warehouse
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id,Request $request)
+    public function destroy($id, Request $request)
     {
         $item = Warehouse::find($id);
         $item->reason = $request->motivo;
         $item->saveOrFail();
         $item->delete();
-       //Warehouse::destroy($id);
         return back();
     }
 }

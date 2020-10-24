@@ -232,11 +232,6 @@ return [
 
     'menu' => [
         [
-            'text' => 'search',
-            'search' => false,
-            'topnav' => false,
-        ],
-        [
             'text' => 'blog',
             'url'  => 'admin/blog',
             'can'  => 'manage-blog',
@@ -254,7 +249,7 @@ return [
         ],
         [
             'text'        => 'Depositos',
-            'url'         => 'admin/blog',
+            'route'         => 'deposito',
             'icon'        => 'fas fa-truck-loading',
         ],
         [
