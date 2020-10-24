@@ -7,6 +7,7 @@ use App\User;
 use Yajra\DataTables\Facades\DataTables;
 use App\Warehouse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class WarehouseController extends Controller
 {
@@ -25,6 +26,7 @@ class WarehouseController extends Controller
     {
         //
         $warehouse = Warehouse::select('id', 'item', 'brand_id', 'code', 'quantity','created_at')->get();
+
         return datatables()->of($warehouse)->toJson();
     }
 
@@ -50,11 +52,11 @@ class WarehouseController extends Controller
         // Warehouse::create($request->all());
         // return $this->successResponse('Organismo financiador creado');
         $storage = new Warehouse();
-        $storage->item = $request->item;
-        $storage->code = $request->code;
-        $storage->color = $request->color;
+        $storage->item =ucfirst($request->item);
+        $storage->code = strtoupper($request->code);
+        $storage->color = ucfirst($request->color);
         $storage->quantity = $request->quantity;
-        $storage->description = $request->description;
+        $storage->description = ucfirst($request->description);
         $storage->brand_id = $request->brand;
         $storage->saveOrFail();
         return back();
@@ -93,12 +95,12 @@ class WarehouseController extends Controller
     public function update(Request $request, Warehouse $warehouse)
     {
         $item = Warehouse::find($request->id);
-        $item->item = $request->item;
+        $item->item = ucfirst($request->item);
         $item->brand_id = $request->brand;
-        $item->code = $request->code;
-        $item->color = $request->color;
+        $item->code = strtoupper($request->code);
+        $item->color = ucfirst($request->color);
         $item->quantity = $request->quantity;
-        $item->description = $request->description;
+        $item->description = ucfirst($request->description);
         $item->saveOrFail();
         return back();
     }

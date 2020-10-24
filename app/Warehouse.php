@@ -42,13 +42,13 @@ class Warehouse extends Model
     public function scopeWhereFrom($query,$fromdate){
         if($fromdate){
 
-            return $query->where('created_at', '>=', $fromdate);
+            return $query->where('warehouses.created_at', '>=', $fromdate);
         }
     }
     public function scopeWhereTo($query,$todate){
         if($todate){
 
-            return $query->where('created_at', '<=', $todate);
+            return $query->where('warehouses.created_at', '<=', $todate);
         }
     }
     public function scopeWhereQuantity($query,$quantity){
