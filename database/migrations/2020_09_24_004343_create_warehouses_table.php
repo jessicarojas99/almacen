@@ -16,9 +16,9 @@ class CreateWarehousesTable extends Migration
         Schema::create('warehouses', function (Blueprint $table) {
             $table->id();
             $table->string('item');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->string('code');
-            $table->string('color');
+            $table->string('color')->nullable();
             $table->integer('quantity');
             $table->string('reason')->nullable();
             $table->softDeletes();

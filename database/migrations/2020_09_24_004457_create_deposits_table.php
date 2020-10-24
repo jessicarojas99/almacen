@@ -16,13 +16,15 @@ class CreateDepositsTable extends Migration
         Schema::create('deposits', function (Blueprint $table) {
             $table->id();
             $table->string('item');
-            $table->string('description');
-            $table->string('brand');
+            $table->string('description')->nullable();
+            $table->foreignId('brand_id')->constrained('brands');
             $table->string('code');
-            $table->integer('size');
-            $table->string('processor');
-            $table->string('codition');
+            $table->integer('size')->nullable();
+            $table->string('processor')->nullable();
+            $table->string('condition');
             $table->string('state');
+            $table->string('reason')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

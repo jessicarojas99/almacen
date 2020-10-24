@@ -7,31 +7,29 @@
 @endsection
 
 @section('content_header')
-    <h1 class="m-0 text-dark">Almacen</h1>
+    <h1 class="m-0 text-dark">Deposito</h1>
 @stop
 
 @section('content')
-@include('warehouse/partials/modal')
-@include('warehouse/partials/infomodal')
+@include('deposit/partials/modal')
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <table id="warehouseTable" class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Id</th>
-                                    <th>Item</th>
-                                    <th>Marca</th>
-                                    <th>Codigo</th>
-                                    <th>Cantidad</th>
-                                    <th>Fecha de creación</th>
-                                    <th></th>
-                                </tr>
-                            </thead>        
-                        </table>
-                    </div>
+                    <table id="depositTable" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Item</th>
+                                <th>Marca</th>
+                                <th>Codigo</th>
+                                <th>Estado</th>
+                                <th>Fecha de creación</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                    </table>
                 </div>
             </div>
         </div>
@@ -42,7 +40,7 @@
 <script src="https://cdn.datatables.net/responsive/2.2.6/js/responsive.bootstrap4.min.js"></script>
 <script>
     $(document).ready(function() {
-        $('#warehouseTable').DataTable( {
+        $('#depositTable').DataTable( {
             dom:
                         "<'row'<'col-md-8 crud-buttons'B><'col-md-4'f>>" +
                         "<'row'<'col-sm-12 col-12'<'#tableScroll.scrollable-table table-responsive't><'p-5'r>>>" +
@@ -59,30 +57,30 @@
                     "previous":"Anterior"
                 }
             },
-            "ajax":"{{route('almacenList')}}",
+            "ajax":"{{route('depositoList')}}",
             "columns":[
-                {data: 'Wid'},
+                {data: 'Did'},
                 {data: 'item'},
                 {data: 'Bname'},
                 {data: 'code'},
-                {data: 'quantity'},
-                {data: 'Wcreated'},
+                {data: 'state'},
+                {data: 'Dcreated'},
                 {data: 'action',orderable: false}
             ]
 
         } );
         $("div.crud-buttons").html(
-        '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#warehouseModal"><i class="fas fa-pen"></i>  Registrar</button>'+
+        '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#depositModal"><i class="fas fa-pen"></i>  Registrar</button>'+
         '&nbsp;&nbsp;<button type="button" class="btn btn-warning btn-sm" id="btnEdit" name="edit" disabled><i class="fas fa-edit"></i> Editar</button>'+
         '&nbsp;&nbsp;<button type="button" class="btn btn-danger btn-sm" id="btnDelete" name="delete" disabled><i class="fas fa-trash"></i> Eliminar</button>');
 
-        var table = $('#warehouseTable').DataTable();
+        var table = $('#depositTable').DataTable();
         // Tomar id y aplicar estilo a la fila
         var idRow
-        $('#warehouseTable tbody').on( 'click', 'tr', function () {
+        $('#depositTable tbody').on( 'click', 'tr', function () {
             table.$('tr.bg-primary').removeClass('bg-primary');
             $(this).addClass("bg-primary");
-            idRow =table.row( this ).data().Wid;
+            idRow =table.row( this ).data().Did;
             if (idRow!=undefined) {
                 document.getElementById("btnEdit").disabled = false;
                 document.getElementById("btnDelete").disabled = false;
@@ -125,7 +123,7 @@
                             // your input data object will be usable from here
                             console.log(data.value.Motivo);
                             $.ajax({
-                                url:"/almacen/eliminar/"+idRow,
+                                url:"/deposito/eliminar/"+idRow,
                                 data:
                                 {
                                     motivo:data.value.Motivo
@@ -139,7 +137,7 @@
                                         timer: 1500
                                         }
                                     )
-                                    $('#warehouseTable').DataTable().ajax.reload();
+                                    $('#depositTable').DataTable().ajax.reload();
                                 }
                             });
                         });
@@ -153,21 +151,24 @@
         $('#btnEdit').click(function () {
             if (idRow !=undefined) {
                 $.ajax({
-                    url:"/almacen/editar/"+idRow,
+                    url:"/deposito/editar/"+idRow,
                     success:function(data){
                         document.getElementById("txtId").value =data[0].id;
                         document.getElementById("txtItem").value =data[0].item;
                         document.getElementById("txtBrand").value =data[0].brand_id;
                         document.getElementById("txtCode").value =data[0].code;
                         document.getElementById("txtDescription").value =data[0].description;
-                        document.getElementById("txtColor").value =data[0].color;
-                        document.getElementById("txtQuantity").value =data[0].quantity;
-                        document.getElementById("txtQuantity").min =data[0].quantity;
+                        document.getElementById("txtSize").value =data[0].size;
+                        document.getElementById("txtProcessor").value =data[0].processor;
+                        document.getElementById("txtCondition").value =data[0].condition;
+                        document.getElementById("txtState").value =data[0].state;
                         document.getElementById("modalTitle").innerHTML ='Editar';
                         document.getElementById("txtItem").disabled =true;
                         document.getElementById("txtBrand").disabled =true;
                         document.getElementById("txtCode").disabled =true;
-                        $('#warehouseModal').modal('show');
+                        document.getElementById("txtSize").disabled=true;
+                        document.getElementById("txtProcessor").disabled=true;
+                        $('#depositModal').modal('show');
 
                     }
                 });
@@ -175,13 +176,13 @@
         });
 
         $('#close').click(function () {
-            $('#warehouseForm')[0].reset();
-            document.getElementById("txtId").value="";
-            document.getElementById("modalTitle").innerHTML ='Registrar';
+            $('#depositForm')[0].reset();
             document.getElementById("txtItem").disabled =false;
             document.getElementById("txtBrand").disabled =false;
             document.getElementById("txtCode").disabled =false;
-            document.getElementById("txtQuantity").min =1;
+            document.getElementById("txtSize").disabled=false;
+            document.getElementById("txtProcessor").disabled=false;
+            document.getElementById("modalTitle").innerHTML ='Registrar';
         })
 
 
@@ -190,35 +191,39 @@
 </script>
 {{-- Registrar y Editar--}}
 <script>
-    form=$('#warehouseForm');
+    form=$('#depositForm');
     form.submit(function(e){
         e.preventDefault();
         var id=$('#txtId').val();
         var item=$('#txtItem').val();
         var brand = $("#txtBrand").val(); // Capturamos el valor del select
         var code=$('#txtCode').val();
-        var color=$('#txtColor').val();
-        var quantity=$('#txtQuantity').val();
+        var size=$('#txtSize').val();
+        var processor=$('#txtProcessor').val();
+        var condition=$('#txtCondition').val();
+        var state=$('#txtState').val();
         var description=$('#txtDescription').val();
         var _token =$("input[name=_token]").val();
 
         if(id !=""){
             $.ajax({
-                url:"{{route('almacenUpdate')}}",
+                url:"{{route('depositoUpdate')}}",
                 type: "POST",
                 data:{
                     id:id,
                     item:item,
                     brand:brand,
                     code:code,
-                    color:color,
-                    quantity:quantity,
+                    size:size,
+                    processor:processor,
+                    condition:condition,
+                    state:state,
                     description:description,
                     _token:_token
                 },
                 success:function (response) {
-                    $('#warehouseModal').modal('hide');
-                    $('#warehouseForm')[0].reset();
+                    $('#depositModal').modal('hide');
+                    $('#depositForm')[0].reset();
                     Swal.fire({
                         title: 'Completado',
                         icon: 'info',
@@ -231,8 +236,9 @@
                     document.getElementById("txtItem").disabled =false;
                     document.getElementById("txtBrand").disabled =false;
                     document.getElementById("txtCode").disabled =false;
-                    document.getElementById("txtQuantity").min =1;
-                    $('#warehouseTable').DataTable().ajax.reload();
+                    document.getElementById("txtSize").disabled=false;
+                    document.getElementById("txtProcessor").disabled=false;
+                    $('#depositTable').DataTable().ajax.reload();
                 },
                 error: data =>  {
                     Swal.fire({
@@ -247,28 +253,30 @@
         }
         else{
             $.ajax({
-                url:"{{route('almacenStore')}}",
+                url:"{{route('depositoStore')}}",
                 type: "POST",
                 data:{
                     item:item,
-                    code:code,
-                    color:color,
-                    quantity:quantity,
-                    description:description,
                     brand:brand,
+                    code:code,
+                    size:size,
+                    processor:processor,
+                    condition:condition,
+                    state:state,
+                    description:description,
                     _token:_token
                 },
                 success:function (response) {
-                    $('#warehouseModal').modal('hide');
-                    $('#warehouseForm')[0].reset();
+                    $('#depositModal').modal('hide');
+                    $('#depositForm')[0].reset();
                     Swal.fire({
                         title: 'Completado',
                         text: 'Registrado con exito!',
                         icon: 'success',
                         showConfirmButton: false,
                         timer: 1500
-                    })
-                    $('#warehouseTable').DataTable().ajax.reload();
+                    });
+                    $('#depositTable').DataTable().ajax.reload();
                 },
                 error: data =>  {
                     Swal.fire({
@@ -282,24 +290,6 @@
             })
         }
     })
-</script>
-<script>
-    function showItem(id){
-        console.log(id);
-        $.ajax({
-            url:"/almacen/mostrar/"+id,
-            success:function(data){
-                console.log(data)
-                document.getElementById("lblItem").innerHTML =data[0].item;
-                document.getElementById("lblBrand").innerHTML =data[0].Bname;
-                document.getElementById("lblCode").innerHTML =data[0].code;
-                document.getElementById("lblQuantity").innerHTML =data[0].quantity;
-                document.getElementById("lblDescription").innerHTML =data;
-                $('#warehouseInfoModal').modal('show');
-
-            }
-        });
-    }
 </script>
 
 @endsection

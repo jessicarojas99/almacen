@@ -39,3 +39,11 @@ Route::get('/consulta', 'ReportsController@index')->name('consultas');
 Route::post('consulta-pdf', 'ReportsController@reportespdf')->name('pdf');
 Route::get('/consultas', 'ReportsController@consulta')->name('consultasgral');
 Route::get('/consultasdeposit', 'ReportsController@consultadeposito')->name('consultadeposit');
+Route::get('/almacen/mostrar/{id}', 'WarehouseController@show')->name('almacenShow');
+
+Route::get('/deposito', 'DepositController@index')->name('deposito');
+Route::get('/deposito/lista', 'DepositController@list')->name('depositoList');
+Route::post('/deposito/registro', 'DepositController@store')->name('depositoStore');
+Route::get('/deposito/eliminar/{id}', 'DepositController@destroy')->name('depositoDelete');
+Route::get('/deposito/editar/{id}', 'DepositController@edit')->name('depositoEdit');
+Route::post('/deposito/actualizar', 'DepositController@update')->name('depositoUpdate');
