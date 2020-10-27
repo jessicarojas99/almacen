@@ -20,19 +20,37 @@ class ReportsController extends Controller
 
     public function reportespdf(Request $request)
     {
-        $warehouse = Warehouse::join("brands","warehouses.brand_id","=","brands.id")
-        ->select('item', 'brands.name as Bname', 'code', 'quantity','warehouses.created_at as Wcreated')
-        ->whereItem($request->item)
-        ->whereBrand($request->marca)
-        ->whereFrom($request->fechainicio)
-        ->whereTo($request->fechafin)
-        ->get();
+        if($request->get('tipo') == 1){
+
+            $warehouse = Warehouse::join("brands","warehouses.brand_id","=","brands.id")
+            ->select('item', 'brands.name as Bname', 'code', 'quantity','warehouses.created_at as Wcreated')
+            ->whereItem($request->item)
+            ->whereBrand($request->marca)
+            ->whereFrom($request->fechainicio)
+            ->whereTo($request->fechafin)
+            ->get();
+            $now=Carbon::now();
+            $pdf= PDF::loadView('reportes.pdf',compact('warehouse','now'));
+            return $pdf->stream('almacen.pdf');
+        }
+        else if($request->get('tipo') == 2)
+        {
+            $deposit = Deposit::join("brands", "deposits.brand_id", "=", "brands.id")
+            ->select('deposits.id as Did', 'item', 'brands.name as Bname', 'code', 'state', 'deposits.created_at as Dcreated')
+            ->whereItem($request->item)
+            ->whereBrand($request->marca)
+            ->whereFrom($request->fechainicio)
+            ->whereTo($request->fechafin)
+            ->whereState($request->estado)
+            ->get();
         $now=Carbon::now();
-        $pdf= PDF::loadView('reportes.pdf',compact('warehouse','now'));
-        return $pdf->stream('reporte.pdf');
-       // $pdf->stream('user-list.pdf');
+        $pdf= PDF::loadView('reportes.pdfdeposit',compact('deposit','now'));
+        return $pdf->stream('deposito.pdf');
+        }       // $pdf->stream('user-list.pdf');
 
     }
+
+
     public function consulta(Request $request)
     {
 
@@ -54,12 +72,16 @@ class ReportsController extends Controller
     {
         if(request()->ajax()){
 
-                $deposit= Deposit::select('id', 'item', 'brand', 'code', 'size','state')
-                ->whereItem($request->item)
-                ->whereBrand($request->brand)
-                ->get();
+            $deposit = Deposit::join("brands", "deposits.brand_id", "=", "brands.id")
+            ->select('deposits.id as Did', 'item', 'brands.name as Bname', 'code', 'state', 'deposits.created_at as Dcreated')
+            ->whereItem($request->item)
+            ->whereBrand($request->brand)
+            ->whereFrom($request->fromdate)
+            ->whereTo($request->todate)
+            ->whereState($request->state)
+            ->get();
+            return Datatables()->of($deposit)->toJson();
 
-            return datatables()->of($deposit)->toJson();
         }
     }
 }

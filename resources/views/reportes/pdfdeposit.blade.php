@@ -78,7 +78,7 @@
 
     <div class="header">
       </div>
-      <h1 id="titulo">Almacén</h1>
+      <h1 id="titulo">Depósito</h1>
       <div class="" style="margin-top: -5%">
           <p>Código: </p>
           <p>Solicitante: </p>
@@ -90,19 +90,20 @@
                     <th>Item</th>
                     <th>Marca</th>
                     <th>Codigo</th>
-                    <th>Cantidad</th>
+                    <th>Estado</th>
                     <th>Fecha</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($warehouse as $item)
+
+                @forelse($deposit as $item)
                 <tr>
 
                     <td>{{$item->item}}</td>
                     <td>{{$item->Bname}}</td>
                     <td>{{$item->code}}</td>
-                    <td>{{$item->quantity}}</td>
-                    <td>{{$item->Wcreated}}</td>
+                    <td>{{$item->state}}</td>
+                    <td>{{$item->Dcreated}}</td>
                 @empty
                 <td class=" list-group-item border-0 ">
                     No existen datos para mostrar
@@ -114,3 +115,4 @@
         </table>
 </body>
 </html>
+

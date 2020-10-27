@@ -54,8 +54,9 @@
                             <div class="form-group col-md-6">
                                 <label for="estado">Estado:</label>
                                 <select id="estado" name="estado" class="form-control" disabled>
-                                  <option selected>Disponible</option>
-                                  <option>No Disponible</option>
+                                  <option value="" selected>Seleccionar</option>
+                                  <option value="Disponible">Disponible</option>
+                                  <option value="No disponible">No disponible</option>
                                 </select>
                             </div>
                             <div class="form-group col-md-6">
@@ -63,10 +64,10 @@
                                 <input type="text" class="form-control" id="cantidad" name="cantidad" disabled>
                               </div>
                           </div>
-                          <button type="button" class="btn btn-warning float-right m-2" id="consultar" name="consultar" disabled>
+                          <button type="button" class="btn btn-success float-right m-2" id="consultar" name="consultar" disabled>
                             <i class="fas fa-search"></i></button>
-                          <button  class="btn btn-success float-right m-2" id="imprimir" disabled>
-                            <i class="fas fa-print"></i>  </button>
+                          <button  class="btn btn-dark float-right m-2 bgVerde" id="imprimir" disabled>
+                            <i class="fa fa-print"></i>  </button>
                       </form>
 
                 </div>
@@ -85,8 +86,8 @@
                                     <th>Item</th>
                                     <th>Marca</th>
                                     <th>Codigo</th>
-                                    <th>Tamaño</th>
                                     <th>Estado</th>
+                                    <th>Fecha</th>
                                 </tr>
                             </thead>
 
@@ -160,7 +161,7 @@
                         ]
                 });
             }
-            function deposito_datatable(item='', brand=''){
+            function deposito_datatable(item='', brand='',fromdate='', todate='', state=''){
 
                 var datatable=$('#DepositTable').DataTable({
                     dom:
@@ -187,28 +188,31 @@
                         data:
                         {
                             item:item,
-                            brand:brand
+                            brand:brand,
+                            fromdate:fromdate,
+                            todate:todate,
+                            state:state
                         }
                     },
                     columns:[
-                            {data: 'id'},
+                            {data: 'Did'},
                             {data: 'item'},
-                            {data: 'brand'},
+                            {data: 'Bname'},
                             {data: 'code'},
-                            {data: 'size'},
-                            {data: 'state'}
+                            {data: 'state'},
+                            {data: 'Dcreated'},
                         ]
                 });
             }
             $('#consultar').click(function(){
+
                 var tipo= $('#tipo').val();
                 var item=$('#item').val();
                 var brand = $('#marca').val();
-                var fromdate= $('#fechainicio').val();
-                console.log(fromdate);
+                var fromdate= $('#fechainicio').val()
                 var todate = $('#fechafin').val();
                 var quantity = $('#cantidad').val();
-
+                var state = $('#estado').val();
                 var tabla1 = document.getElementById('deposito');
                 var tabla = document.getElementById('almacen');
                 if(tipo==1)
@@ -221,7 +225,7 @@
                  else if(tipo==2)
                  {
                     $('#DepositTable').DataTable().destroy();
-                     deposito_datatable(item,brand);
+                     deposito_datatable(item,brand,fromdate,todate,state);
                      tabla1.style.display = '';
                      tabla.style.display = 'none';
                  }
@@ -241,6 +245,7 @@
         if(tipo==1)
         {
           cantidad.disabled = false;
+          estado.disabled = true;
           document.getElementById("consultar").disabled = false;
           document.getElementById("imprimir").disabled = false;
 
