@@ -25,7 +25,8 @@ class CreateDepositsTable extends Migration
             $table->string('state');
             $table->string('reason')->nullable();
             $table->softDeletes();
-            $table->timestamps();
+            $table->date('created_at');
+            $table->date('updated_at');
         });
     }
 

@@ -42,7 +42,7 @@
                         </div>
                         <div class="form-group col">
                             <label for="txtProcessor">Procesador</label>
-                            <input type="text" class="form-control" id="txtProcessor" placeholder="Introduzca el tipo de procesador"> 
+                            <input type="text" class="form-control" id="txtProcessor" placeholder="Introduzca el tipo de procesador">
                         </div>
                     </div>
                     <div class="form-row">
@@ -53,8 +53,8 @@
                         <div class="form-group col">
                             <label for="txtState"><span style="color: red">*</span>Estado</label>
                             <select id="txtState" class="form-control">
-                                <option selected value="1">Disponible</option>
-                                <option value="0">No disponible</option>
+                                <option selected value="Disponible">Disponible</option>
+                                <option value="No Disponible">No disponible</option>
                             </select>
                         </div>
                     </div>

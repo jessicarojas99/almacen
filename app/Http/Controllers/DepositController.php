@@ -26,13 +26,6 @@ class DepositController extends Controller
         $deposit = Deposit::join("brands", "deposits.brand_id", "=", "brands.id")
             ->select('deposits.id as Did', 'item', 'brands.name as Bname', 'code', 'state', 'deposits.created_at as Dcreated')->get();
         return Datatables()->of($deposit)
-            ->editColumn('state', function ($deposit) {
-                if ($deposit->state == 1) {
-                    return "Disponible";
-                } else {
-                    return "No disponible";
-                }
-            })
             ->addColumn('action', function ($deposit) {
                 $acciones = '<a href="javascript:void(0)" onclick="showItem(' . $deposit->Did . ')" class="btn btn-info btn-sm"><i class="fas fa-info-circle"></i> Info</a>';
                 return $acciones;
