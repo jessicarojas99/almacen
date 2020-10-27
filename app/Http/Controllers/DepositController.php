@@ -42,13 +42,13 @@ class DepositController extends Controller
     public function store(Request $request)
     {
         $storage = new Deposit();
-        $storage->item = $request->item;
-        $storage->code = $request->code;
+        $storage->item = ucfirst($request->item);
+        $storage->code = strtoupper($request->code);
         $storage->size = $request->size;
-        $storage->processor = $request->processor;
-        $storage->condition = $request->condition;
+        $storage->processor = strtoupper($request->processor);
+        $storage->condition = ucfirst($request->condition);
         $storage->state = $request->state;
-        $storage->description = $request->description;
+        $storage->description = ucfirst($request->description);
         $storage->brand_id = $request->brand;
         $storage->saveOrFail();
         return back();
@@ -87,13 +87,13 @@ class DepositController extends Controller
     public function update(Request $request, Deposit $deposit)
     {
         $item = Deposit::find($request->id);
-        $item->item = $request->item;
-        $item->code = $request->code;
+        $item->item = ucfirst($request->item);
+        $item->code = strtoupper($request->code);
         $item->size = $request->size;
-        $item->processor = $request->processor;
-        $item->condition = $request->condition;
+        $item->processor = strtoupper($request->processor);
+        $item->condition = ucfirst($request->condition);
         $item->state = $request->state;
-        $item->description = $request->description;
+        $item->description = ucfirst($request->description);
         $item->brand_id = $request->brand;
         $item->saveOrFail();
         return back();
