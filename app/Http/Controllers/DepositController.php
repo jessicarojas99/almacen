@@ -41,16 +41,34 @@ class DepositController extends Controller
      */
     public function store(Request $request)
     {
-        $storage = new Deposit();
-        $storage->item = ucfirst($request->item);
-        $storage->code = strtoupper($request->code);
-        $storage->size = $request->size;
-        $storage->processor = strtoupper($request->processor);
-        $storage->condition = ucfirst($request->condition);
-        $storage->state = $request->state;
-        $storage->description = ucfirst($request->description);
-        $storage->brand_id = $request->brand;
-        $storage->saveOrFail();
+        if($request->name!=""){
+
+            $marca = new Brand();
+            $marca ->name = ucfirst($request->name);
+            $marca->saveOrFail();
+            $storage = new Deposit();
+            $storage->item = ucfirst($request->item);
+            $storage->code = strtoupper($request->code);
+            $storage->size = $request->size;
+            $storage->processor = strtoupper($request->processor);
+            $storage->condition = ucfirst($request->condition);
+            $storage->state = $request->state;
+            $storage->description = ucfirst($request->description);
+            $storage->brand_id = $marca->id;
+            $storage->saveOrFail();
+        }
+        else{
+            $storage = new Deposit();
+            $storage->item = ucfirst($request->item);
+            $storage->code = strtoupper($request->code);
+            $storage->size = $request->size;
+            $storage->processor = strtoupper($request->processor);
+            $storage->condition = ucfirst($request->condition);
+            $storage->state = $request->state;
+            $storage->description = ucfirst($request->description);
+            $storage->brand_id = $request->brand;
+            $storage->saveOrFail();
+        }
         return back();
     }
 

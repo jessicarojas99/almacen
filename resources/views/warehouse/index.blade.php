@@ -7,7 +7,7 @@
 @endsection
 
 @section('content_header')
-    <h1 class="m-0 text-dark">Almacen</h1>
+    <h1 class="m-0 text-dark">Almacén</h1>
 @stop
 
 @section('content')
@@ -24,12 +24,12 @@
                                     <th>Id</th>
                                     <th>Item</th>
                                     <th>Marca</th>
-                                    <th>Codigo</th>
+                                    <th>Código</th>
                                     <th>Cantidad</th>
                                     <th>Fecha de creación</th>
                                     <th></th>
                                 </tr>
-                            </thead>        
+                            </thead>
                         </table>
                     </div>
                 </div>
@@ -133,7 +133,7 @@
                                 success:function(data){
                                     Swal.fire({
                                         title:'Eliminado!',
-                                        text:'El item fue eliminado con exito',
+                                        text:'El item fue eliminado con éxito',
                                         icon:'success',
                                         showConfirmButton: false,
                                         timer: 1500
@@ -166,6 +166,7 @@
                         document.getElementById("modalTitle").innerHTML ='Editar';
                         document.getElementById("txtItem").disabled =true;
                         document.getElementById("txtBrand").disabled =true;
+                        document.getElementById("add-brand").disabled =true;
                         document.getElementById("txtCode").disabled =true;
                         $('#warehouseModal').modal('show');
 
@@ -182,6 +183,7 @@
             document.getElementById("txtBrand").disabled =false;
             document.getElementById("txtCode").disabled =false;
             document.getElementById("txtQuantity").min =1;
+            document.getElementById('marcadiv').style.display="none";
         })
 
 
@@ -196,6 +198,7 @@
         var id=$('#txtId').val();
         var item=$('#txtItem').val();
         var brand = $("#txtBrand").val(); // Capturamos el valor del select
+        var name=$("#brand").val();
         var code=$('#txtCode').val();
         var color=$('#txtColor').val();
         var quantity=$('#txtQuantity').val();
@@ -233,6 +236,7 @@
                     document.getElementById("txtCode").disabled =false;
                     document.getElementById("txtQuantity").min =1;
                     $('#warehouseTable').DataTable().ajax.reload();
+
                 },
                 error: data =>  {
                     Swal.fire({
@@ -254,6 +258,7 @@
                     code:code,
                     color:color,
                     quantity:quantity,
+                    name:name,
                     description:description,
                     brand:brand,
                     _token:_token
@@ -268,7 +273,14 @@
                         showConfirmButton: false,
                         timer: 1500
                     })
-                    $('#warehouseTable').DataTable().ajax.reload();
+                    if(name!=""){
+                        location.reload(true);
+                    }
+                    else
+                    {
+                        $('#warehouseTable').DataTable().ajax.reload();
+                    }
+
                 },
                 error: data =>  {
                     Swal.fire({
@@ -300,6 +312,14 @@
             }
         });
     }
+</script>
+
+<script>
+        $('#add-brand').click(function () {
+            var marca = document.getElementById('marcadiv');
+            var marcaselect = document.getElementById('txtBrand').disabled = true;
+            marca.style.display = '';
+    });
 </script>
 
 @endsection

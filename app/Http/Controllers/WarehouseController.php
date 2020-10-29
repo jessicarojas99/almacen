@@ -21,7 +21,6 @@ class WarehouseController extends Controller
         $brands = Brand::all();
         return view('warehouse.index', compact('brands'));
     }
-
     public function list()
     {
         //
@@ -45,22 +44,42 @@ class WarehouseController extends Controller
      */
     public function store(Request $request)
     {
-        $storage = new Warehouse();
-        $storage->item = ucfirst($request->item);
-        $storage->code = strtoupper($request->code);
-        $storage->color = ucfirst($request->color);
-        $storage->quantity = $request->quantity;
-        $storage->description = ucfirst($request->description);
-        $storage->brand_id = $request->brand;
-        $storage->saveOrFail();
-        $rec = new Record();
-        $rec->warehouse_id = $storage->id;
-        $rec->quantity = $storage->quantity;
-        $rec->saveOrFail();
+        if($request->name!=""){
+
+            $marca = new Brand();
+            $marca ->name = ucfirst($request->name);
+            $marca->saveOrFail();
+            $storage = new Warehouse();
+            $storage->item = ucfirst($request->item);
+            $storage->code = strtoupper($request->code);
+            $storage->color = ucfirst($request->color);
+            $storage->quantity = $request->quantity;
+            $storage->description = ucfirst($request->description);
+            $storage->brand_id = $marca->id;
+            $storage->saveOrFail();
+            $rec = new Record();
+            $rec->warehouse_id = $storage->id;
+            $rec->quantity = $storage->quantity;
+            $rec->saveOrFail();
+        }
+        else{
+            $storage = new Warehouse();
+            $storage->item = ucfirst($request->item);
+            $storage->code = strtoupper($request->code);
+            $storage->color = ucfirst($request->color);
+            $storage->quantity = $request->quantity;
+            $storage->description = ucfirst($request->description);
+            $storage->brand_id = $request->brand;
+            $storage->saveOrFail();
+            $rec = new Record();
+            $rec->warehouse_id = $storage->id;
+            $rec->quantity = $storage->quantity;
+            $rec->saveOrFail();
+        }
         return back();
     }
 
-    /**
+        /**
      * Display the specified resource.
      *
      * @param  \App\Warehouse  $warehouse

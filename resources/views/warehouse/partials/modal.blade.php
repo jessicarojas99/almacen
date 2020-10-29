@@ -23,16 +23,26 @@
                     <div class="form-row">
                         <div class="form-group col">
                             <label for="txtBrand"><span style="color: red">*</span>Marca</label>
-                            <select id="txtBrand" class="form-control">
-                              <option selected>Seleccion una marca</option>
-                              @foreach ($brands as $branditem)
-                                  <option value="{{$branditem->id}}">{{$branditem->name}}</option>
-                              @endforeach
-                            </select>
+                            <div class="input-group">
+                                <select id="txtBrand" class="form-control">
+                                    <option selected>Seleccion una marca</option>
+                                    @foreach ($brands as $branditem)
+                                        <option value="{{$branditem->id}}">{{$branditem->name}}</option>
+                                    @endforeach
+                                  </select>
+                                <div class="input-group-append">
+                                  <button class="btn btn-success" type="button" id="add-brand"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                                </div>
+                              </div>
                         </div>
                         <div class="form-group col">
                             <label for="txtCode"><span style="color: red">*</span>Codigo</label>
                             <input type="text" class="form-control" id="txtCode" placeholder="Introduzca el codigo">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-6" style="display: none" id="marcadiv">
+                                <input type="text" class="form-control" id="brand" placeholder="Introduzca una nueva marca">
                         </div>
                     </div>
                     <div class="form-row">

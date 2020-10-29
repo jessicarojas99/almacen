@@ -12,7 +12,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <form method="POST" action="{{ route('pdf') }}" target="_blank">
+                    <form method="POST" action="{{ route('pdf') }}" target="_blank" id="formconsultas">
                         @csrf
                         <div class="form-row">
                           <div class="form-group col-md-6">
@@ -64,10 +64,13 @@
                                 <input type="text" class="form-control" id="cantidad" name="cantidad" disabled>
                               </div>
                           </div>
+
                           <button type="button" class="btn btn-success float-right m-2" id="consultar" name="consultar" disabled>
                             <i class="fas fa-search"></i></button>
                           <button  class="btn btn-dark float-right m-2 bgVerde" id="imprimir" disabled>
                             <i class="fa fa-print"></i>  </button>
+                            <button type="button" class="btn btn-warning float-right m-2" id="limpiar" disabled>
+                                <i class="fas fa-broom"></i></button>
                       </form>
 
                 </div>
@@ -100,7 +103,7 @@
                                 <th>Id</th>
                                 <th>Item</th>
                                 <th>Marca</th>
-                                <th>Codigo</th>
+                                <th>Código</th>
                                 <th>Cantidad</th>
                                 <th>Fecha</th>
                             </tr>
@@ -233,10 +236,18 @@
                     tabla.style.display = 'none';
                     tabla1.style.display = 'none';
                  }
-
             });
 
         });
+        $('#limpiar').click(function(){
+            $('#formconsultas')[0].reset();
+            document.getElementById("consultar").disabled = true;
+          document.getElementById("imprimir").disabled = true;
+          document.getElementById("limpiar").disabled = true;
+          var tabla1 = document.getElementById('deposito').style.display='none';
+          var tabla = document.getElementById('almacen').style.display='none';
+
+        })
       function ShowSelected()
       {
         var tipo = document.getElementById("tipo").value;
@@ -248,6 +259,7 @@
           estado.disabled = true;
           document.getElementById("consultar").disabled = false;
           document.getElementById("imprimir").disabled = false;
+          document.getElementById("limpiar").disabled = false;
 
         }
         else  if(tipo==2)
@@ -256,6 +268,7 @@
           cantidad.disabled = true;
           document.getElementById("consultar").disabled = false;
           document.getElementById("imprimir").disabled = false;
+          document.getElementById("limpiar").disabled = false;
 
         }
         else{
@@ -263,7 +276,7 @@
           cantidad.disabled = true;
           document.getElementById("consultar").disabled = true;
           document.getElementById("imprimir").disabled = true;
-
+          document.getElementById("limpiar").disabled = true;
         }
       }
 
