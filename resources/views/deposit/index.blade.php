@@ -7,7 +7,7 @@
 @endsection
 
 @section('content_header')
-    <h1 class="m-0 text-dark">Deposito</h1>
+    <h1 class="m-0 text-dark">Depósito</h1>
 @stop
 
 @section('content')
@@ -22,7 +22,7 @@
                                 <th>Id</th>
                                 <th>Item</th>
                                 <th>Marca</th>
-                                <th>Codigo</th>
+                                <th>Código</th>
                                 <th>Estado</th>
                                 <th>Fecha de creación</th>
                                 <th></th>
@@ -167,6 +167,7 @@
                         document.getElementById("txtBrand").disabled =true;
                         document.getElementById("txtCode").disabled =true;
                         document.getElementById("txtSize").disabled=true;
+                        document.getElementById("add-brand").disabled =true;
                         document.getElementById("txtProcessor").disabled=true;
                         $('#depositModal').modal('show');
 
@@ -183,6 +184,7 @@
             document.getElementById("txtSize").disabled=false;
             document.getElementById("txtProcessor").disabled=false;
             document.getElementById("modalTitle").innerHTML ='Registrar';
+            document.getElementById('marcadiv').style.display="none";
         })
 
 
@@ -197,6 +199,7 @@
         var id=$('#txtId').val();
         var item=$('#txtItem').val();
         var brand = $("#txtBrand").val(); // Capturamos el valor del select
+        var name=$("#brand").val();
         var code=$('#txtCode').val();
         var size=$('#txtSize').val();
         var processor=$('#txtProcessor').val();
@@ -260,6 +263,7 @@
                     brand:brand,
                     code:code,
                     size:size,
+                    name:name,
                     processor:processor,
                     condition:condition,
                     state:state,
@@ -271,12 +275,18 @@
                     $('#depositForm')[0].reset();
                     Swal.fire({
                         title: 'Completado',
-                        text: 'Registrado con exito!',
+                        text: 'Registrado con éxito!',
                         icon: 'success',
                         showConfirmButton: false,
                         timer: 1500
                     });
-                    $('#depositTable').DataTable().ajax.reload();
+                    if(name!=""){
+                        location.reload(true);
+                    }
+                    else
+                    {
+                        $('#depositTable').DataTable().ajax.reload();
+                    }
                 },
                 error: data =>  {
                     Swal.fire({
@@ -291,5 +301,11 @@
         }
     })
 </script>
-
+<script>
+    $('#add-brand').click(function () {
+        var marca = document.getElementById('marcadiv');
+        var marcaselect = document.getElementById('txtBrand').disabled = true;
+        marca.style.display = '';
+});
+</script>
 @endsection
