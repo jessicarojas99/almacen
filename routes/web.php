@@ -49,3 +49,8 @@ Route::get('/deposito/editar/{id}', 'DepositController@edit')->name('depositoEdi
 Route::post('/deposito/actualizar', 'DepositController@update')->name('depositoUpdate');
 Route::get('/deposito/mostrar/{id}', 'DepositController@show')->name('depositoShow');
 
+
+Route::get('/comprobante', 'TicketController@index')->name('ticket');
+Route::get('/comprobante/lista', 'TicketController@list')->name('ticketList');
+Route::get('/comprobante/select/{id}', 'TicketController@itemSelected')->name('ticketItemSelect');
+Route::post('/comprobante/registro', 'TicketController@store')->name('ticketStore');

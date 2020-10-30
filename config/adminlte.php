@@ -244,7 +244,7 @@ return [
         ],
         [
             'text'        => 'Comprobante',
-            'url'         => 'admin/blog',
+            'url'         => 'comprobante',
             'icon'        => 'fas fa-clipboard-list',
         ],
         [
