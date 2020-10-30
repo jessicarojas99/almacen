@@ -12,6 +12,7 @@
 
 @section('content')
 @include('deposit/partials/modal')
+@include('deposit/partials/infomodal')
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -102,11 +103,15 @@
                 }).then((result) => {
                     if (result.isConfirmed){
                         Swal.fire({
+                            title: "Ingrese el motivo de la eliminación",
+                            icon: 'info',
                             html: `
-                            <textarea class="form-control" id="txtMotivo" rows="3" placeholder="Introduzca una descripcion"></textarea>
+                            <textarea class="form-control" id="txtMotivo"></textarea>
                             `,
-                            confirmButtonText: 'Confirm',
-                            // ...
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Guardar',
+                            cancelButtonText: 'Cancelar',
                             showCancelButton: true,
                             preConfirm: function() {
                                 return new Promise((resolve, reject) => {
@@ -229,7 +234,7 @@
                     $('#depositForm')[0].reset();
                     Swal.fire({
                         title: 'Completado',
-                        icon: 'info',
+                        icon: 'success',
                         text: 'Actualizado con exito!',
                         showConfirmButton: false,
                         timer: 1500
@@ -299,6 +304,46 @@
                 }
             })
         }
+    })
+</script>
+<script>
+    function showItem(id){
+        console.log(id);
+
+        $.ajax({
+            url:"/deposito/mostrar/"+id,
+            success:function(data){
+                console.log(data)
+
+                var procesador=document.getElementById("lblprocessor");
+                var tamanio=document.getElementById("lblsize");
+                document.getElementById("lblItem").innerHTML =data[0].item;
+                document.getElementById("lblBrand").innerHTML =data[0].Bname;
+                document.getElementById("lblCode").innerHTML =data[0].code;
+                document.getElementById("lblEstado").innerHTML =data[0].state;
+                document.getElementById("lblDescription").innerHTML =data[0].description;
+                if(data[0].size!=null && data[0].size!=""){
+                    document.getElementById("size").style.display="";
+
+                    tamanio.innerHTML =data[0].size+" pulg.";
+                }
+                if(data[0].processor!=null && data[0].processor!=""){
+                    document.getElementById("processor").style.display="";
+
+                    procesador.innerHTML =data[0].processor;
+                }
+                $('#depositInfoModal').modal('show');
+
+            }
+        });
+    }
+
+    $('.closeinfo').click(function () {
+       document.getElementById("lblprocessor").value="";
+       console.log("hoal");
+       document.getElementById("processor").style.display="none";
+       document.getElementById("size").style.display="none";
+       document.getElementById("lblsize").value="";
     })
 </script>
 <script>

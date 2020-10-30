@@ -42,6 +42,7 @@
 <script src="https://cdn.datatables.net/responsive/2.2.6/js/responsive.bootstrap4.min.js"></script>
 <script>
     $(document).ready(function() {
+
         $('#warehouseTable').DataTable( {
             dom:
                         "<'row'<'col-md-8 crud-buttons'B><'col-md-4'f>>" +
@@ -104,11 +105,15 @@
                 }).then((result) => {
                     if (result.isConfirmed){
                         Swal.fire({
+                            title: "Ingrese el motivo de la eliminación",
+                            icon: 'info',
                             html: `
-                            <textarea class="form-control" id="txtMotivo" rows="3" placeholder="Introduzca una descripcion"></textarea>
+                            <textarea class="form-control" id="txtMotivo"></textarea>
                             `,
-                            confirmButtonText: 'Confirm',
-                            // ...
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Guardar',
+                            cancelButtonText: 'Cancelar',
                             showCancelButton: true,
                             preConfirm: function() {
                                 return new Promise((resolve, reject) => {
@@ -117,8 +122,6 @@
                                         Motivo: $('#txtMotivo').val()
 
                                     });
-
-                                    // maybe also reject() on some condition
                                 });
                             }
                         }).then((data) => {
@@ -224,7 +227,7 @@
                     $('#warehouseForm')[0].reset();
                     Swal.fire({
                         title: 'Completado',
-                        icon: 'info',
+                        icon: 'success',
                         text: 'Actualizado con exito!',
                         showConfirmButton: false,
                         timer: 1500
@@ -298,6 +301,7 @@
 <script>
     function showItem(id){
         console.log(id);
+        var tablaDatos= $("#tableinfo");
         $.ajax({
             url:"/almacen/mostrar/"+id,
             success:function(data){
@@ -306,12 +310,16 @@
                 document.getElementById("lblBrand").innerHTML =data[0].Bname;
                 document.getElementById("lblCode").innerHTML =data[0].code;
                 document.getElementById("lblQuantity").innerHTML =data[0].quantity;
-                document.getElementById("lblDescription").innerHTML =data;
+                document.getElementById("lblDescription").innerHTML =data[0].description;
+                document.getElementById("lblColor").innerHTML =data[0].color;
                 $('#warehouseInfoModal').modal('show');
-
+                tablaDatos.empty();
+                for(i in data)
+                tablaDatos.append("<tr><td>"+data[i].Rdate+"</td><td>"+data[i].Rquantity+"</td></tr>");
             }
         });
     }
+
 </script>
 
 <script>
