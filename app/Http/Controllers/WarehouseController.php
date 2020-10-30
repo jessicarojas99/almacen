@@ -89,11 +89,12 @@ class WarehouseController extends Controller
     {
         $item = Record::join("warehouses", "records.warehouse_id", "=", "warehouses.id")
             ->join("brands", "warehouses.brand_id", "=", "brands.id")
-            ->select("warehouses.item", "brands.name as Bname", "warehouses.code", "warehouses.quantity", "records.quantity as Rquantity", "records.created_at as Rdate")
+            ->select("warehouses.item", "brands.name as Bname", "warehouses.code", "warehouses.quantity", "records.quantity as Rquantity", "warehouses.description","warehouses.created_at as Wdate","warehouses.color","records.created_at as Rdate")
             ->where("records.warehouse_id", "=", $id)
             ->get();
         // $item = Record::where("records.warehouse_id", "=", $id)->get();
         return response()->json($item);
+
     }
 
     /**

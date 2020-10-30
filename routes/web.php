@@ -47,4 +47,5 @@ Route::post('/deposito/registro', 'DepositController@store')->name('depositoStor
 Route::get('/deposito/eliminar/{id}', 'DepositController@destroy')->name('depositoDelete');
 Route::get('/deposito/editar/{id}', 'DepositController@edit')->name('depositoEdit');
 Route::post('/deposito/actualizar', 'DepositController@update')->name('depositoUpdate');
+Route::get('/deposito/mostrar/{id}', 'DepositController@show')->name('depositoShow');
 

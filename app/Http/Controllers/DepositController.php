@@ -78,9 +78,13 @@ class DepositController extends Controller
      * @param  \App\Deposit  $deposit
      * @return \Illuminate\Http\Response
      */
-    public function show(Deposit $deposit)
+    public function show($id)
     {
-        //
+        $item = Deposit::join("brands", "deposits.brand_id", "=", "brands.id")
+            ->select("deposits.id as Did", "deposits.item", "brands.name as Bname", 'deposits.code', 'deposits.state', 'deposits.size','deposits.processor','deposits.description','deposits.created_at as Dcreated')
+            ->where("deposits.id", "=", $id)
+            ->get();
+        return response()->json($item);
     }
 
     /**
