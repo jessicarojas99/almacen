@@ -306,19 +306,35 @@
             url:"/almacen/mostrar/"+id,
             success:function(data){
                 console.log(data)
+                var description= document.getElementById("lblDescription");
+                var color= document.getElementById("lblColor");
                 document.getElementById("lblItem").innerHTML =data[0].item;
                 document.getElementById("lblBrand").innerHTML =data[0].Bname;
                 document.getElementById("lblCode").innerHTML =data[0].code;
                 document.getElementById("lblQuantity").innerHTML =data[0].quantity;
-                document.getElementById("lblDescription").innerHTML =data[0].description;
-                document.getElementById("lblColor").innerHTML =data[0].color;
+                if(data[0].description !=null && data[0].description !=""){
+                    document.getElementById("description").style.display="";
+                    description.innerHTML =data[0].description;
+                }
+                if(data[0].color !=null && data[0].color!=""){
+                    document.getElementById("color").style.display="";
+                    color.innerHTML =data[0].color;
+                }
                 $('#warehouseInfoModal').modal('show');
+
                 tablaDatos.empty();
                 for(i in data)
                 tablaDatos.append("<tr><td>"+data[i].Rdate+"</td><td>"+data[i].Rquantity+"</td></tr>");
             }
         });
     }
+
+    $('.closeinfo').click(function () {
+        document.getElementById("description").style.display="none";
+        document.getElementById("lblDescription").value="";
+        document.getElementById("color").style.display="none";
+        document.getElementById("lblColor").value="";
+     })
 
 </script>
 

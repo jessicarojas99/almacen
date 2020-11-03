@@ -119,6 +119,12 @@ class WarehouseController extends Controller
     public function update(Request $request, Warehouse $warehouse)
     {
         $item = Warehouse::find($request->id);
+        if($request->quantity != $item->quantity){
+            $rec = new Record();
+            $rec->warehouse_id = $item->id;
+            $rec->quantity = $item->quantity;
+            $rec->saveOrFail();
+        }
         $item->item = ucfirst($request->item);
         $item->brand_id = $request->brand;
         $item->code = strtoupper($request->code);
@@ -126,10 +132,6 @@ class WarehouseController extends Controller
         $item->quantity = $request->quantity;
         $item->description = ucfirst($request->description);
         $item->saveOrFail();
-        $rec = new Record();
-        $rec->warehouse_id = $item->id;
-        $rec->quantity = $item->quantity;
-        $rec->saveOrFail();
         return back();
     }
 

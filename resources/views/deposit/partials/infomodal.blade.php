@@ -42,7 +42,7 @@ data-keyboard="false">
                     <label for="Lblprocesor"><u>Procesador</u></label>
                     <label class="form-control border-0 font-weight-normal" id="lblprocessor"></label>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="display: none" id="description">
                     <label for="txtDescription"><u>Descripción</u></label>
                     <label class="form-control border-0 font-weight-normal" id="lblDescription"></label>
                 </div>
