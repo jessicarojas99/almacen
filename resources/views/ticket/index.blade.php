@@ -9,8 +9,8 @@
 @section('content_header')
     <h1 class="m-0 text-dark">Almacen</h1>
 @stop
-@include('ticket/partials/register')
 @section('content')
+@include('ticket/partials/register')
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -100,6 +100,7 @@
                 document.getElementById('subItem').innerHTML="cantidad "+data.quantity;
                 document.getElementById('itemId').value=data.id;
                 document.getElementById('quantityInput').max=data.quantity;
+                $("#divItemSelect").children().prop('disabled',false);
             }
         })
     });
@@ -112,6 +113,7 @@
         var fila='<tr class="selected align-items-center" id="fila'+cont+'"><td><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td><input type="hidden" name="idItem[]" value="'+id+'">'+id+'</td><td>'+item+'</td><td><input type="number" name="quantityItem[]" value="'+quantity+'"></td></tr>';
         cont++;
         $('#detail').append(fila);
+        $("#divItemSelect").children().prop('disabled',true);
     });
 
     function eliminar(index) {
