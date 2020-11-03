@@ -8,7 +8,7 @@ data-keyboard="false">
                 {{-- header --}}
                 <h5 class="modal-title" id="modalTitle">Información</h5>
                 {{-- Boton cerrar --}}
-                <button type="button" class="close" id="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close closeinfo" id="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 </div>
@@ -35,11 +35,11 @@ data-keyboard="false">
                             <label class="form-control border-0 font-weight-normal" id="lblQuantity"></label>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="display: none" id="color">
                         <label for="txtDescription"><u>Color</u></label>
                         <label class="form-control border-0 font-weight-normal" id="lblColor"></label>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="display: none" id="description">
                         <label for="txtDescription"><u>Descripción</u></label>
                         <label class="form-control border-0 font-weight-normal" id="lblDescription"></label>
                     </div>
@@ -60,7 +60,7 @@ data-keyboard="false">
                 </div>
                 {{-- Botones footer --}}
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary btn-sm" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary btn-sm closeinfo" data-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>

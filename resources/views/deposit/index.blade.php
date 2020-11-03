@@ -317,20 +317,23 @@
 
                 var procesador=document.getElementById("lblprocessor");
                 var tamanio=document.getElementById("lblsize");
+                var description=document.getElementById("lblDescription");
                 document.getElementById("lblItem").innerHTML =data[0].item;
                 document.getElementById("lblBrand").innerHTML =data[0].Bname;
                 document.getElementById("lblCode").innerHTML =data[0].code;
                 document.getElementById("lblEstado").innerHTML =data[0].state;
-                document.getElementById("lblDescription").innerHTML =data[0].description;
+
                 if(data[0].size!=null && data[0].size!=""){
                     document.getElementById("size").style.display="";
-
                     tamanio.innerHTML =data[0].size+" pulg.";
                 }
                 if(data[0].processor!=null && data[0].processor!=""){
                     document.getElementById("processor").style.display="";
-
                     procesador.innerHTML =data[0].processor;
+                }
+                if(data[0].description !=null && data[0].description !=""){
+                    document.getElementById("description").style.display="";
+                    description.innerHTML =data[0].description;
                 }
                 $('#depositInfoModal').modal('show');
 
@@ -340,10 +343,11 @@
 
     $('.closeinfo').click(function () {
        document.getElementById("lblprocessor").value="";
-       console.log("hoal");
        document.getElementById("processor").style.display="none";
        document.getElementById("size").style.display="none";
+       document.getElementById("description").style.display="none";
        document.getElementById("lblsize").value="";
+       document.getElementById("lblDescription").value="";
     })
 </script>
 <script>
