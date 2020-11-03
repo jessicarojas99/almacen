@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Ticket;
+use App\Warehouse;
+use App\Ticket_detail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class TicketController extends Controller
 {
@@ -14,17 +18,30 @@ class TicketController extends Controller
      */
     public function index()
     {
-        //
+        $items = Warehouse::select(DB::raw("CONCAT(warehouses.item,' - ',warehouses.code) AS itemCode"), 'warehouses.id')
+            ->get();
+        return view('ticket.index', compact('items'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function itemSelected($id)
     {
-        //
+        $item = Warehouse::select(DB::raw("CONCAT(warehouses.item,' - ',warehouses.code) AS itemCode"), 'warehouses.id', 'warehouses.quantity')
+            ->where('warehouses.id', '=', $id)
+            ->first();
+        return response()->json($item);
+    }
+
+    public function list()
+    {
+        $ticket = Ticket::join("users", "tickets.user_id", "=", "users.id")
+            ->select('tickets.id as Tid', 'code', 'users.name as Uname', 'responsable', 'tickets.created_at as Tcreated')->get();
+        return Datatables()->of($ticket)
+            ->addColumn('action', function ($ticket) {
+                $acciones = '<a href="javascript:void(0)" onclick="showItem(' . $ticket->Tid . ')" class="btn btn-info btn-sm"><i class="fas fa-info-circle"></i> Detalle</a>';
+                return $acciones;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
 
     /**
@@ -35,7 +52,36 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // try {
+        //     DB::beginTransaction();
+        //code...
+        $ticket = new Ticket();
+        $ticket->code = "CF31";
+        $ticket->responsable = $request->responsable;
+        $ticket->user_id = Auth::id();
+        $ticket->saveOrFail();
+
+        $idDetail = $request->idDetailValue;
+        $quantityDetail = $request->quantityDetailValue;
+        $cont = 0;
+
+        while ($cont < count($idDetail)) {
+            $item = Warehouse::find($idDetail[$cont]);
+            $item->quantity = ($item->quantity) - $quantityDetail[$cont];
+            $item->saveOrFail();
+            $detail = new Ticket_detail();
+            $detail->quantity = $quantityDetail[$cont];
+            $detail->warehouse_id = $idDetail[$cont];
+            $detail->ticket_id = $ticket->id;
+            $detail->saveOrFail();
+            $cont = $cont + 1;
+        }
+
+        // DB::commit();
+        // } catch (\Exception $e) {
+        //     DB::rollBack();
+        // }
+        return back();
     }
 
     /**
