@@ -134,8 +134,6 @@
             quantityDetailValue[i]=elementquantity.value;
             idDetailValue[i]=elementid.value;
         }
-        console.log(quantityDetailValue);
-        console.log(idDetailValue);
 
         $.ajax({
             url:"{{route('ticketStore')}}",
