@@ -57,7 +57,7 @@ class TicketController extends Controller
         //code...
         $ticket = new Ticket();
         $ticket->code = "CF31";
-        $ticket->responsable = $request->responsable;
+        $ticket->responsable = ucwords($request->responsable);
         $ticket->user_id = Auth::id();
         $ticket->saveOrFail();
 
@@ -90,9 +90,16 @@ class TicketController extends Controller
      * @param  \App\Ticket  $ticket
      * @return \Illuminate\Http\Response
      */
-    public function show(Ticket $ticket)
+    public function show($id)
     {
-        //
+        $ticket = Ticket_detail::join("tickets","tickets.id","=","ticket_details.ticket_id")
+        ->join("users", "tickets.user_id", "=", "users.id")
+        ->join("warehouses","warehouses.id","=","ticket_details.warehouse_id")
+        ->select('tickets.id as Tid', 'tickets.code as Tcode', 'users.name as Uname', 'responsable','warehouses.item as Witem','warehouses.code as Wcode' ,'ticket_details.quantity as Tquantity','ticket_details.id as TDid','tickets.created_at as Tcreated')
+        ->where("tickets.id", "=", $id)
+        ->get();
+
+        return response()->json($ticket);
     }
 
     /**
