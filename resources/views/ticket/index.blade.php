@@ -7,15 +7,16 @@
 @endsection
 
 @section('content_header')
-    <h1 class="m-0 text-dark">Almacen</h1>
+    <h1 class="m-0 text-dark">Almacén</h1>
 @stop
 @section('content')
 @include('ticket/partials/register')
+@include('ticket/partials/detalle')
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    
+
                     <div class="table-responsive">
                         <table id="ticketTable" class="table table-striped">
                             <thead>
@@ -27,14 +28,14 @@
                                     <th>Fecha de creación</th>
                                     <th></th>
                                 </tr>
-                            </thead>        
+                            </thead>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
+
 @stop
 @section('js')
 <script src="https://cdn.datatables.net/responsive/2.2.6/js/dataTables.responsive.min.js"></script>
@@ -168,6 +169,27 @@
         })
 
     })
+</script>
+<script>
+    function showItem(id){
+        console.log(id);
+        var tablaDatos= $("#detailinfo");
+        $.ajax({
+            url:"/comprobante/mostrar/"+id,
+            success:function(data){
+                console.log(data)
+                document.getElementById("lblCodigo").innerHTML =data[0].Tcode;
+                document.getElementById("lblresponsable").innerHTML =data[0].Uname;
+                document.getElementById("lblEntrega").innerHTML =data[0].responsable;
+                $('#ticketModalInfo').modal('show');
+                tablaDatos.empty();
+                for(i in data)
+                    tablaDatos.append("<tr><td>"+data[i].Witem.concat("/"+data[i].Wcode)+"</td><td>"+data[i].Tquantity+"</td></tr>");
+
+            }
+        });
+    }
+
 </script>
 
 @endsection

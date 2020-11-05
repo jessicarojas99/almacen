@@ -54,3 +54,4 @@ Route::get('/comprobante', 'TicketController@index')->name('ticket');
 Route::get('/comprobante/lista', 'TicketController@list')->name('ticketList');
 Route::get('/comprobante/select/{id}', 'TicketController@itemSelected')->name('ticketItemSelect');
 Route::post('/comprobante/registro', 'TicketController@store')->name('ticketStore');
+Route::get('/comprobante/mostrar/{id}', 'TicketController@show')->name('ticketShow');
