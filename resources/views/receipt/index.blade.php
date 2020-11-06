@@ -7,18 +7,17 @@
 @endsection
 
 @section('content_header')
-    <h1 class="m-0 text-dark">Comprobantes</h1>
+    <h1 class="m-0 text-dark">Recibos</h1>
 @stop
 @section('content')
-@include('ticket/partials/register')
-@include('ticket/partials/detalle')
+@include('receipt/partials/register')
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-
+                    
                     <div class="table-responsive">
-                        <table id="ticketTable" class="table table-striped">
+                        <table id="receiptTable" class="table table-striped">
                             <thead>
                                 <tr>
                                     <th>Id</th>
@@ -28,21 +27,21 @@
                                     <th>Fecha de creación</th>
                                     <th></th>
                                 </tr>
-                            </thead>
+                            </thead>        
                         </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+    
 @stop
 @section('js')
 <script src="https://cdn.datatables.net/responsive/2.2.6/js/dataTables.responsive.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.6/js/responsive.bootstrap4.min.js"></script>
 <script>
     $(document).ready(function() {
-        $('#ticketTable').DataTable( {
+        $('#receiptTable').DataTable( {
             dom:
                         "<'row'<'col-md-8 crud-buttons'B><'col-md-4'f>>" +
                         "<'row'<'col-sm-12 col-12'<'#tableScroll.scrollable-table table-responsive't><'p-5'r>>>" +
@@ -59,13 +58,13 @@
                     "previous":"Anterior"
                 }
             },
-            "ajax":"{{route('ticketList')}}",
+            "ajax":"{{route('receiptList')}}",
             "columns":[
-                {data: 'Tid'},
+                {data: 'Rid'},
                 {data: 'code'},
                 {data: 'Uname'},
                 {data: 'responsable'},
-                {data: 'Tcreated'},
+                {data: 'Rcreated'},
                 {data: 'action',orderable: false}
             ]
 
@@ -73,10 +72,10 @@
         $("div.crud-buttons").html(
         '<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target=".bd-example-modal-lg" ><i class="fas fa-pen"></i>  Registrar entrega</button>');
 
-        var table = $('#ticketTable').DataTable();
+        var table = $('#receiptTable').DataTable();
         // Tomar id y aplicar estilo a la fila
         var idRow
-        $('#ticketTable tbody').on( 'click', 'tr', function () {
+        $('#receiptTable tbody').on( 'click', 'tr', function () {
             table.$('tr.bg-primary').removeClass('bg-primary');
             $(this).addClass("bg-primary");
             idRow =table.row( this ).data().id;
@@ -90,33 +89,20 @@
 </script>
 <script>
     var cont=0;
-    // Abrir modal
+    // Añadir a la tabla
     $('#btnItemSelect').click(function () {
         var item =$('#txtItem').val();
         $.ajax({
-            url:"/comprobante/select/"+item,
+            url:"/prestamo/select/"+item,
             success:function(data){
                 console.log(data.itemCode);
-                document.getElementById('lblItem').innerHTML=data.itemCode;
-                document.getElementById('subItem').innerHTML="cantidad "+data.quantity;
-                document.getElementById('itemId').value=data.id;
-                document.getElementById('quantityInput').max=data.quantity;
+                var fila='<tr class="selected align-items-center" id="fila'+data.id+'"><td><button type="button" class="btn btn-danger" onclick="eliminar('+data.id+');">X</button></td><td><input type="hidden" name="idItem[]" value="'+data.id+'">'+data.id+'</td><td>'+data.itemCode+'</td></tr>';
+                cont++;
+                $('#detail').append(fila);
                 $("#divItemSelect").children().prop('disabled',false);
             }
         })
     });
-    // Añadir a tabla
-    $('#btnAddDetail').click(function(){
-        var id= $('#itemId').val();
-        var item= $('#lblItem').text();
-        var quantity= $('#quantityInput').val();
-
-        var fila='<tr class="selected align-items-center" id="fila'+cont+'"><td><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td><input type="hidden" name="idItem[]" value="'+id+'">'+id+'</td><td>'+item+'</td><td><input type="number" name="quantityItem[]" value="'+quantity+'"></td></tr>';
-        cont++;
-        $('#detail').append(fila);
-        $("#divItemSelect").children().prop('disabled',true);
-    });
-
     function eliminar(index) {
         $("#fila"+ index).remove();
 
@@ -125,29 +111,28 @@
     $('#btnStoreDetail').click(function () {
         var _token =$("input[name=_token]").val();
         var responsable=$('#txtResponsable').val();
-        var quantityDetailValue=[];
+        var delivery=$('#txtDelivery').val();
+        var returnDate=$('#txtReturn').val();
         var idDetailValue=[];
-        var quantityDetail=document.getElementsByName('quantityItem[]');
         var idDetail=document.getElementsByName('idItem[]')
-        for (let i = 0; i < quantityDetail.length; i++) {
-            var elementquantity = quantityDetail[i];
+        for (let i = 0; i < idDetail.length; i++) {
             var elementid = idDetail[i];
-            quantityDetailValue[i]=elementquantity.value;
             idDetailValue[i]=elementid.value;
         }
 
         $.ajax({
-            url:"{{route('ticketStore')}}",
+            url:"{{route('receiptStore')}}",
             type:"POST",
             data:{
                 responsable:responsable,
-                quantityDetailValue:quantityDetailValue,
+                delivery:delivery,
+                return:returnDate,
                 idDetailValue:idDetailValue,
                 _token:_token
             },
             success:function(response){
-                $('#ticketModal').modal('hide');
-                $('#ticketForm')[0].reset();
+                $('#receiptModal').modal('hide');
+                $('#receiptForm')[0].reset();
                 Swal.fire({
                         title: 'Completado',
                         text: 'Registrado con exito!',
@@ -155,7 +140,7 @@
                         showConfirmButton: false,
                         timer: 1500
                 })
-                $('#ticketTable').DataTable().ajax.reload();
+                $('#receiptTable').DataTable().ajax.reload();
             },
             error: data =>  {
                 Swal.fire({
@@ -169,27 +154,6 @@
         })
 
     })
-</script>
-<script>
-    function showItem(id){
-        console.log(id);
-        var tablaDatos= $("#detailinfo");
-        $.ajax({
-            url:"/comprobante/mostrar/"+id,
-            success:function(data){
-                console.log(data)
-                document.getElementById("lblCodigo").innerHTML =data[0].Tcode;
-                document.getElementById("lblresponsable").innerHTML =data[0].Uname;
-                document.getElementById("lblEntrega").innerHTML =data[0].responsable;
-                $('#ticketModalInfo').modal('show');
-                tablaDatos.empty();
-                for(i in data)
-                    tablaDatos.append("<tr><td>"+data[i].Witem.concat("/"+data[i].Wcode)+"</td><td>"+data[i].Tquantity+"</td></tr>");
-
-            }
-        });
-    }
-
 </script>
 
 @endsection
