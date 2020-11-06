@@ -254,7 +254,7 @@ return [
         ],
         [
             'text'        => 'Prestamos',
-            'url'         => 'admin/blog',
+            'url'         => 'prestamo',
             'icon'        => 'far fa-clipboard',
         ],
         [

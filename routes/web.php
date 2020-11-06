@@ -55,3 +55,8 @@ Route::get('/comprobante/lista', 'TicketController@list')->name('ticketList');
 Route::get('/comprobante/select/{id}', 'TicketController@itemSelected')->name('ticketItemSelect');
 Route::post('/comprobante/registro', 'TicketController@store')->name('ticketStore');
 Route::get('/comprobante/mostrar/{id}', 'TicketController@show')->name('ticketShow');
+
+Route::get('/prestamo', 'ReceiptController@index')->name('receipt');
+Route::get('/prestamo/lista', 'ReceiptController@list')->name('receiptList');
+Route::get('/prestamo/select/{id}', 'ReceiptController@itemSelected')->name('receiptItemSelect');
+Route::post('/prestamo/registro', 'ReceiptController@store')->name('receiptStore');

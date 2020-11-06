@@ -18,7 +18,7 @@ class CreateReceiptsTable extends Migration
             $table->string('code');
             $table->string('responsable');
             $table->dateTime('delivery_date');
-            $table->dateTime('return_date');
+            $table->dateTime('return_date')->nullable();
             $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
