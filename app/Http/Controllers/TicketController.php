@@ -8,6 +8,8 @@ use App\Ticket_detail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Support\Carbon;
 
 class TicketController extends Controller
 {
@@ -37,7 +39,8 @@ class TicketController extends Controller
             ->select('tickets.id as Tid', 'code', 'users.name as Uname', 'responsable', 'tickets.created_at as Tcreated')->get();
         return Datatables()->of($ticket)
             ->addColumn('action', function ($ticket) {
-                $acciones = '<a href="javascript:void(0)" onclick="showItem(' . $ticket->Tid . ')" class="btn btn-info btn-sm"><i class="fas fa-info-circle"></i> Detalle</a>';
+                $acciones = '<a href="javascript:void(0)" onclick="showItem(' . $ticket->Tid . ')" class="btn btn-info btn-sm"><i class="fas fa-info-circle"></i> Detalle</a>
+                <a href="/comprobante/imprimir/'.$ticket->Tid.'" target="_blank" class="btn btn-dark btn-sm bgVerde"><i class="fas fa-print"></i> Comprobante</a>';
                 return $acciones;
             })
             ->rawColumns(['action'])
@@ -95,13 +98,25 @@ class TicketController extends Controller
         $ticket = Ticket_detail::join("tickets","tickets.id","=","ticket_details.ticket_id")
         ->join("users", "tickets.user_id", "=", "users.id")
         ->join("warehouses","warehouses.id","=","ticket_details.warehouse_id")
-        ->select('tickets.id as Tid', 'tickets.code as Tcode', 'users.name as Uname', 'responsable','warehouses.item as Witem','warehouses.code as Wcode' ,'ticket_details.quantity as Tquantity','ticket_details.id as TDid','tickets.created_at as Tcreated')
+        ->select(DB::raw("CONCAT(warehouses.item,' - ',warehouses.code) AS Witem"),'tickets.id as Tid', 'tickets.code as Tcode', 'users.name as Uname', 'responsable','warehouses.code as Wcode' ,'ticket_details.quantity as Tquantity','ticket_details.id as TDid','tickets.created_at as Tcreated')
         ->where("tickets.id", "=", $id)
         ->get();
 
         return response()->json($ticket);
     }
 
+    public function printTicket($id){
+
+        $ticket = Ticket_detail::join("tickets","tickets.id","=","ticket_details.ticket_id")
+        ->join("users", "tickets.user_id", "=", "users.id")
+        ->join("warehouses","warehouses.id","=","ticket_details.warehouse_id")
+        ->select('tickets.id as Tid', 'tickets.code as Tcode', 'users.name as Uname', 'responsable','warehouses.item as Witem','warehouses.code as Wcode' ,'ticket_details.quantity as Tquantity','ticket_details.id as TDid','tickets.created_at as Tcreated')
+        ->where("tickets.id", "=", $id)
+        ->get();
+        $now=Carbon::now();
+        $pdf= PDF::loadView('ticket.comprobante',compact('ticket','now'));
+        return $pdf->stream('comprobante.pdf');
+    }
     /**
      * Show the form for editing the specified resource.
      *

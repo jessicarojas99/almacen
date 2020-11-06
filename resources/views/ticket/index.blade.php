@@ -184,12 +184,21 @@
                 $('#ticketModalInfo').modal('show');
                 tablaDatos.empty();
                 for(i in data)
-                    tablaDatos.append("<tr><td>"+data[i].Witem.concat("/"+data[i].Wcode)+"</td><td>"+data[i].Tquantity+"</td></tr>");
+                    tablaDatos.append("<tr><td>"+data[i].Witem+"</td><td>"+data[i].Tquantity+"</td></tr>");
 
             }
         });
     }
-
 </script>
-
+<script>
+    function PrintTicket(){
+        $.ajax({
+            url:"/comprobante/imprimir",
+            type:"POST",
+            success:function(data){
+                document.location.href="/comprobante/imprimir"
+            }
+        });
+    }
+</script>
 @endsection
