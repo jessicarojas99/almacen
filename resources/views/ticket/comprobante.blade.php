@@ -127,15 +127,10 @@
       <div style="width:80%">
         <div style="padding-top:7px;padding-left:20px;width:100%;">
 
-          <div><strong>Entregado a:  </strong>{{$ticket[0]->responsable}}</div><br>
-          <div><strong>Responsable:  </strong> {{$ticket[0]->Uname}}</div><br>
-
-        </div>
-      </div>
-      <div style="width:80%">
-        <div style="padding-top:7px;padding-left:20px;width:100%;">
-            <div><strong>Fecha:</strong> {{$now->format('d/m/Y')}}</div><br>
-            <div><strong>Código:  </strong>{{$ticket[0]->Tcode}}</div>
+          <div><strong>Entregado a:  </strong>{{$ticket[0]->responsable}}</div>
+          <div><strong>Responsable:  </strong> {{$ticket[0]->Uname}}</div>
+          <div><strong>Fecha:</strong> {{$now->format('d/m/Y')}}</div>
+          <div><strong>Código:  </strong>{{$ticket[0]->Tcode}}</div>
 
         </div>
       </div>

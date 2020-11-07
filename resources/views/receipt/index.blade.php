@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Almacen')
+@section('title', 'Prestamos')
 
 @section('css')
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.6/css/responsive.bootstrap4.min.css">
@@ -11,11 +11,12 @@
 @stop
 @section('content')
 @include('receipt/partials/register')
+@include('receipt/partials/detail')
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    
+
                     <div class="table-responsive">
                         <table id="receiptTable" class="table table-striped">
                             <thead>
@@ -27,14 +28,14 @@
                                     <th>Fecha de creación</th>
                                     <th></th>
                                 </tr>
-                            </thead>        
+                            </thead>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
+
 @stop
 @section('js')
 <script src="https://cdn.datatables.net/responsive/2.2.6/js/dataTables.responsive.min.js"></script>
@@ -155,5 +156,36 @@
 
     })
 </script>
+<script>
+    function showItem(id){
+        console.log(id);
+        var tablaDatos= $("#detailinfo");
+        $.ajax({
+            url:"/prestamo/mostrar/"+id,
+            success:function(data){
+             console.log(data)
+                document.getElementById("lblCodigo").innerHTML =data[0].Rcode;
+                document.getElementById("lblresponsable").innerHTML =data[0].Uname;
+                document.getElementById("lblEntrega").innerHTML =data[0].responsable;
+                document.getElementById("lblEntregaFecha").innerHTML =data[0].delivery_date;
+                if(data[0].return_date!=null && data[0].return_date!=""){
+                    document.getElementById("fechadevolucion").style.display="";
+                    document.getElementById("lblRetornoFecha").innerHTML =data[0].return_date;
+                }
+                $('#receiptModalInfo').modal('show');
+                tablaDatos.empty();
+                for(i in data)
+                    tablaDatos.append("<tr><td>"+data[i].itemCode+"</td></tr>");
 
+            }
+        });
+    }
+
+    $('.cerrarinfo').click(function () {
+        document.getElementById("lblEntregaFecha").value="";
+        document.getElementById("fechadevolucion").style.display="none";
+     })
+
+
+</script>
 @endsection

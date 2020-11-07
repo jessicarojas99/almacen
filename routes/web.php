@@ -61,4 +61,5 @@ Route::get('/prestamo', 'ReceiptController@index')->name('receipt');
 Route::get('/prestamo/lista', 'ReceiptController@list')->name('receiptList');
 Route::get('/prestamo/select/{id}', 'ReceiptController@itemSelected')->name('receiptItemSelect');
 Route::post('/prestamo/registro', 'ReceiptController@store')->name('receiptStore');
-
+Route::get('/prestamo/mostrar/{id}', 'ReceiptController@show')->name('receiptShow');
+Route::get('/prestamo/imprimir/{id}', 'ReceiptController@printReceipt')->name('receiptPrint');

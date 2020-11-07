@@ -1,5 +1,5 @@
-<div class="modal fade bd-example-modal-lg" id="ticketModalInfo" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <form id="ticketFormdetail">
+<div class="modal fade bd-example-modal-lg" id="receiptModalInfo" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static">
+    <form id="receiptFormdetail">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -15,6 +15,16 @@
                     <div class="form-group">
                         <label for="lblCodigo"><u>Código</u></label>
                         <label type="text" class="form-control border-0 font-weight-normal" id="lblCodigo"></label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col">
+                            <label for="lblEntregaFecha"><u>Fecha de entrega: </u></label>
+                            <label type="text" class="form-control border-0 font-weight-normal" id="lblEntregaFecha"></label>
+                        </div>
+                        <div class="col" style="display: none" id="fechadevolucion">
+                            <label for="lblRetornoFecha"><u>Fecha de devolucion: </u></label>
+                            <label type="text" class="form-control border-0 font-weight-normal" id="lblRetornoFecha"></label>
+                        </div>
                     </div>
                     <div class="form-group row">
                         <div class="col">

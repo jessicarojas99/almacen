@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Almacen')
+@section('title', 'Comprobantes')
 
 @section('css')
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.6/css/responsive.bootstrap4.min.css">
@@ -185,18 +185,6 @@
                 tablaDatos.empty();
                 for(i in data)
                     tablaDatos.append("<tr><td>"+data[i].Witem+"</td><td>"+data[i].Tquantity+"</td></tr>");
-
-            }
-        });
-    }
-</script>
-<script>
-    function PrintTicket(){
-        $.ajax({
-            url:"/comprobante/imprimir",
-            type:"POST",
-            success:function(data){
-                document.location.href="/comprobante/imprimir"
             }
         });
     }
