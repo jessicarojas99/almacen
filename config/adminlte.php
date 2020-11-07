@@ -15,7 +15,7 @@ return [
     */
 
     'title' => '',
-    'title_prefix' => 'Almacen |',
+    'title_prefix' => 'Ende Andina |',
     'title_postfix' => '',
 
     /*
@@ -188,7 +188,7 @@ return [
 
     'use_route_url' => false,
 
-    'dashboard_url' => 'home',
+    'dashboard_url' => 'almacen',
 
     'logout_url' => 'logout',
 
@@ -238,17 +238,17 @@ return [
         ],
 
         [
-            'text'        => 'Almacen',
+            'text'        => 'Almacén',
             'route'       => 'almacen',
             'icon'        => 'fas fa-boxes',
         ],
         [
-            'text'        => 'Comprobante',
+            'text'        => 'Comprobantes',
             'url'         => 'comprobante',
             'icon'        => 'fas fa-clipboard-list',
         ],
         [
-            'text'        => 'Depositos',
+            'text'        => 'Depósito',
             'route'         => 'deposito',
             'icon'        => 'fas fa-truck-loading',
         ],

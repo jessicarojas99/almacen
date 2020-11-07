@@ -1,5 +1,5 @@
 
-<div class="modal fade bd-example-modal-lg" id="ticketModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade bd-example-modal-lg" id="receiptModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <form id="receiptForm">
         @csrf
         <div class="modal-dialog modal-lg" role="document">

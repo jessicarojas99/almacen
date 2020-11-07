@@ -8,6 +8,8 @@ use App\Receipt_detail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Support\Carbon;
 
 class ReceiptController extends Controller
 {
@@ -38,7 +40,8 @@ class ReceiptController extends Controller
             ->select('receipts.id as Rid', 'code', 'users.name as Uname', 'responsable', 'receipts.created_at as Rcreated')->get();
         return Datatables()->of($receipt)
             ->addColumn('action', function ($receipt) {
-                $acciones = '<a href="javascript:void(0)" onclick="showItem(' . $receipt->Tid . ')" class="btn btn-info btn-sm"><i class="fas fa-info-circle"></i> Detalle</a>';
+                $acciones = '<a href="javascript:void(0)" onclick="showItem(' . $receipt->Rid . ')" class="btn btn-info btn-sm"><i class="fas fa-info-circle"></i> Detalle</a>
+                <a href="/prestamo/imprimir/'.$receipt->Rid.'" target="_blank" class="btn btn-dark btn-sm bgVerde"><i class="fas fa-print"></i> Recibo</a>';
                 return $acciones;
             })
             ->rawColumns(['action'])
@@ -58,7 +61,7 @@ class ReceiptController extends Controller
         //code...
         $receipt = new Receipt();
         $receipt->code = "CF31";
-        $receipt->responsable = $request->responsable;
+        $receipt->responsable = ucwords($request->responsable);
         $receipt->delivery_date = $request->delivery;
         $receipt->return_date = $request->return;
         $receipt->user_id = Auth::id();
@@ -91,9 +94,29 @@ class ReceiptController extends Controller
      * @param  \App\Receipt  $receipt
      * @return \Illuminate\Http\Response
      */
-    public function show(Receipt $receipt)
+    public function show($id)
     {
-        //
+        $receipt = Receipt_detail::join("receipts","receipts.id","=","receipt_details.receipt_id")
+        ->join("users", "receipts.user_id", "=", "users.id")
+        ->join("deposits","deposits.id","=","receipt_details.deposit_id")
+        ->select(DB::raw("CONCAT(deposits.item,' - ',deposits.code) AS itemCode"),'receipts.id as Rid', 'receipts.code as Rcode', 'users.name as Uname', 'responsable','delivery_date','return_date')
+        ->where("receipts.id", "=", $id)
+        ->get();
+
+        return response()->json($receipt);
+    }
+    public function printReceipt($id)
+    {
+        $receipt = Receipt_detail::join("receipts","receipts.id","=","receipt_details.receipt_id")
+        ->join("users", "receipts.user_id", "=", "users.id")
+        ->join("deposits","deposits.id","=","receipt_details.deposit_id")
+        ->select(DB::raw("CONCAT(deposits.item,' - ',deposits.code) AS itemCode"),'receipts.id as Rid', 'receipts.code as Rcode', 'users.name as Uname', 'responsable','delivery_date','return_date')
+        ->where("receipts.id", "=", $id)
+        ->get();
+
+        $now=Carbon::now();
+        $pdf= PDF::loadView('receipt.recibos',compact('receipt','now'));
+        return $pdf->stream('recibo.pdf');
     }
 
     /**
