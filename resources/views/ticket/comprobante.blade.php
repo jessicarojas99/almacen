@@ -121,7 +121,7 @@
     </div>
     <div class="principalT">
       <div style="width:100%;text-align:center;font-size:20px">
-       <hr><div><strong>Comprobante de Almacén</strong></div><hr>
+       <div><strong>Comprobante de Almacén</strong></div><hr>
       </div>
     </div>
       <div style="width:80%">
@@ -135,7 +135,7 @@
         </div>
       </div>
     <div class="">
-        <h3 class="center"><u>Artículos </u></h3>
+        <h3 class="center">Artículos</h3>
       <table class="table table-striped">
         <thead>
           <tr>

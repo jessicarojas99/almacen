@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 class TicketController extends Controller
 {
@@ -58,6 +59,18 @@ class TicketController extends Controller
         // try {
         //     DB::beginTransaction();
         //code...
+        $dato = Validator::make($request->all(), [
+            'responsable' => 'required|min:3|max:200',
+        ],[
+            'responsable.required' =>'El campo responsable es obligatorio.',
+            'responsable.min' => 'El responsable debe tener al menos 3 caracteres.',
+            'responsable.max' => 'El responsable no debe exceder a los 200 caracteres.',
+        ]);
+        if ($dato->fails())
+        {
+            return response()->json(['errors'=>$dato->errors()]);
+        }
+        else{
         $ticket = new Ticket();
         $ticket->code = "CF31";
         $ticket->responsable = ucwords($request->responsable);
@@ -79,7 +92,7 @@ class TicketController extends Controller
             $detail->saveOrFail();
             $cont = $cont + 1;
         }
-
+    }
         // DB::commit();
         // } catch (\Exception $e) {
         //     DB::rollBack();

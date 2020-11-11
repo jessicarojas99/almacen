@@ -29,7 +29,6 @@
         .header {
             position: fixed;
             width: 100%;
-            background: #beb9b9b0;
             height: 120px;
             text-align:center;
             opacity: 0.5;
@@ -79,11 +78,6 @@
     <div class="header">
       </div>
       <h1 id="titulo">Depósito</h1>
-      <div class="" style="margin-top: -5%">
-          <p>Código: </p>
-          <p>Solicitante: </p>
-      </div>
-
           <table id="tabla">
             <thead>
                 <tr>

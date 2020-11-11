@@ -96,7 +96,6 @@
         $.ajax({
             url:"/prestamo/select/"+item,
             success:function(data){
-                console.log(data.itemCode);
                 var fila='<tr class="selected align-items-center" id="fila'+data.id+'"><td><button type="button" class="btn btn-danger" onclick="eliminar('+data.id+');">X</button></td><td><input type="hidden" name="idItem[]" value="'+data.id+'">'+data.id+'</td><td>'+data.itemCode+'</td></tr>';
                 cont++;
                 $('#detail').append(fila);
@@ -131,17 +130,38 @@
                 idDetailValue:idDetailValue,
                 _token:_token
             },
-            success:function(response){
-                $('#receiptModal').modal('hide');
-                $('#receiptForm')[0].reset();
-                Swal.fire({
-                        title: 'Completado',
-                        text: 'Registrado con exito!',
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 1500
-                })
-                $('#receiptTable').DataTable().ajax.reload();
+            success:function(data){
+                var vresponsable = document.getElementById("txtResponsable");
+                var vdelivery = document.getElementById("txtDelivery");
+                if(data.errors) {
+                    if(data.errors.responsable){
+                        vresponsable.classList.add("is-invalid");
+                        document.getElementById('errorResponsable').innerHTML = data.errors.responsable[0];
+                    }
+                    else{
+                       vresponsable.classList.remove("is-invalid");
+                    }
+                    if(data.errors.delivery){
+                        vdelivery.classList.add("is-invalid");
+                        document.getElementById('errorDelivery').innerHTML = data.errors.delivery[0];
+                    }
+                    else{
+                       vdelivery.classList.remove("is-invalid");
+                    }
+                }
+                else{
+                    $('#receiptModal').modal('hide');
+                    ValidationClear();
+                    $('#receiptForm')[0].reset();
+                    Swal.fire({
+                            title: 'Completado',
+                            text: 'Registrado con exito!',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 1500
+                    })
+                    $('#receiptTable').DataTable().ajax.reload();
+                }
             },
             error: data =>  {
                 Swal.fire({
@@ -155,15 +175,17 @@
         })
 
     })
+    $('#close').click(function () {
+        $('#receiptForm')[0].reset();
+        ValidationClear();
+    })
 </script>
 <script>
     function showItem(id){
-        console.log(id);
         var tablaDatos= $("#detailinfo");
         $.ajax({
             url:"/prestamo/mostrar/"+id,
             success:function(data){
-             console.log(data)
                 document.getElementById("lblCodigo").innerHTML =data[0].Rcode;
                 document.getElementById("lblresponsable").innerHTML =data[0].Uname;
                 document.getElementById("lblEntrega").innerHTML =data[0].responsable;
@@ -186,6 +208,9 @@
         document.getElementById("fechadevolucion").style.display="none";
      })
 
-
+     function ValidationClear(){
+        document.getElementById("txtDelivery").classList.remove("is-invalid");
+        document.getElementById("txtResponsable").classList.remove("is-invalid");
+        }
 </script>
 @endsection

@@ -96,7 +96,6 @@
         $.ajax({
             url:"/comprobante/select/"+item,
             success:function(data){
-                console.log(data.itemCode);
                 document.getElementById('lblItem').innerHTML=data.itemCode;
                 document.getElementById('subItem').innerHTML="cantidad "+data.quantity;
                 document.getElementById('itemId').value=data.id;
@@ -145,17 +144,30 @@
                 idDetailValue:idDetailValue,
                 _token:_token
             },
-            success:function(response){
-                $('#ticketModal').modal('hide');
-                $('#ticketForm')[0].reset();
-                Swal.fire({
-                        title: 'Completado',
-                        text: 'Registrado con exito!',
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 1500
-                })
-                $('#ticketTable').DataTable().ajax.reload();
+            success:function(data){
+                    var responsable1 = document.getElementById("txtResponsable");
+                    if(data.errors) {
+                        if(data.errors.responsable){
+                                responsable1.classList.add("is-invalid");
+                                document.getElementById('errorResponsable').innerHTML = data.errors.responsable[0];
+                            }
+                            else{
+                                responsable1.classList.remove("is-invalid");
+                            }
+                    }
+                    else{
+                        $('#ticketModal').modal('hide');
+                        ValidationClear();
+                        $('#ticketForm')[0].reset();
+                        Swal.fire({
+                                title: 'Completado',
+                                text: 'Registrado con exito!',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500
+                        })
+                        $('#ticketTable').DataTable().ajax.reload();
+                    }
             },
             error: data =>  {
                 Swal.fire({
@@ -169,15 +181,17 @@
         })
 
     })
+    $('#close').click(function () {
+        $('#ticketForm')[0].reset();
+        ValidationClear();
+    })
 </script>
 <script>
     function showItem(id){
-        console.log(id);
         var tablaDatos= $("#detailinfo");
         $.ajax({
             url:"/comprobante/mostrar/"+id,
             success:function(data){
-                console.log(data)
                 document.getElementById("lblCodigo").innerHTML =data[0].Tcode;
                 document.getElementById("lblresponsable").innerHTML =data[0].Uname;
                 document.getElementById("lblEntrega").innerHTML =data[0].responsable;
@@ -188,5 +202,8 @@
             }
         });
     }
+    function ValidationClear(){
+        document.getElementById("txtResponsable").classList.remove("is-invalid");
+        }
 </script>
 @endsection

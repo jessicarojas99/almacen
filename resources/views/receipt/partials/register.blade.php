@@ -1,6 +1,6 @@
 
 <div class="modal fade bd-example-modal-lg" id="receiptModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <form id="receiptForm">
+    <form id="receiptForm" autocomplete="off">
         @csrf
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -17,11 +17,13 @@
                     <div class="form-group">
                         <label for="txtResponsable"><span style="color: red">*</span>Entregado a</label>
                         <input type="text" class="form-control" id="txtResponsable" placeholder="Introduzca el responsable">
+                        <div class="invalid-feedback" id="errorResponsable"></div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col">
                             <label for="txtDelivery"><span style="color: red">*</span>Fecha de entrega</label>
                             <input type="date" class="form-control" id="txtDelivery" >
+                            <div class="invalid-feedback" id="errorDelivery"></div>
                         </div>
                         <div class="form-group col">
                             <label for="txtReturn">Fecha de retorno</label>
@@ -33,7 +35,7 @@
                         <div class="input-group mb-3">
                             {{-- <input type="text" class="form-control" id="txtItem" placeholder="Introduzca el item"> --}}
 
-                            <select id="txtItem" class="form-control">
+                            <select id="txtItem" class="custom-select">
                                 <option selected>Seleccione un item</option>
                                 @foreach ($items as $item)
                                     <option value="{{$item->id}}">{{$item->itemCode}}</option>

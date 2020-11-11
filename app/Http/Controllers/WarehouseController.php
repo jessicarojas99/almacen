@@ -8,6 +8,7 @@ use DataTables;
 use App\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
 
 class WarehouseController extends Controller
 {
@@ -46,37 +47,81 @@ class WarehouseController extends Controller
     {
         if($request->name!=""){
 
-            $marca = new Brand();
-            $marca ->name = ucfirst($request->name);
-            $marca->saveOrFail();
-            $storage = new Warehouse();
-            $storage->item = ucfirst($request->item);
-            $storage->code = strtoupper($request->code);
-            $storage->color = ucfirst($request->color);
-            $storage->quantity = $request->quantity;
-            $storage->description = ucfirst($request->description);
-            $storage->brand_id = $marca->id;
-            $storage->saveOrFail();
-            $rec = new Record();
-            $rec->warehouse_id = $storage->id;
-            $rec->quantity = $storage->quantity;
-            $rec->saveOrFail();
+            $dato = Validator::make($request->all(), [
+                'item' => 'required|min:3|max:200',
+                'code' => 'required|min:3|max:200',
+                'quantity' => 'required|integer',
+                'name'=> 'unique:brands',
+
+            ],[
+                'item.required' =>'El item es obligatorio.',
+                'item.min' => 'El item debe tener al menos 3 caracteres.',
+                'item.max' => 'El item no debe exceder a los 200 caracteres.',
+                'code.required' =>'El código es obligatorio.',
+                'code.min' => 'El código debe tener al menos 3 caracteres.',
+                'code.max' => 'El código no debe exceder a los 200 caracteres.',
+                'name.unique' => 'El nombre ya existe.'
+
+            ]);
+            if ($dato->fails())
+            {
+                return response()->json(['errors'=>$dato->errors()]);
+            }
+            else{
+                $marca = new Brand();
+                $marca ->name = ucfirst($request->name);
+                $marca->saveOrFail();
+                $storage = new Warehouse();
+                $storage->item = ucfirst($request->item);
+                $storage->code = strtoupper($request->code);
+                $storage->color = ucfirst($request->color);
+                $storage->quantity = $request->quantity;
+                $storage->description = ucfirst($request->description);
+                $storage->brand_id = $marca->id;
+                $storage->saveOrFail();
+                $rec = new Record();
+                $rec->warehouse_id = $storage->id;
+                $rec->quantity = $storage->quantity;
+                $rec->saveOrFail();
+            }
         }
         else{
-            $storage = new Warehouse();
-            $storage->item = ucfirst($request->item);
-            $storage->code = strtoupper($request->code);
-            $storage->color = ucfirst($request->color);
-            $storage->quantity = $request->quantity;
-            $storage->description = ucfirst($request->description);
-            $storage->brand_id = $request->brand;
-            $storage->saveOrFail();
-            $rec = new Record();
-            $rec->warehouse_id = $storage->id;
-            $rec->quantity = $storage->quantity;
-            $rec->saveOrFail();
+            $dato = Validator::make($request->all(), [
+                'item' => 'required|min:3|max:200',
+                'code' => 'required|min:3|max:200',
+                'quantity' => 'required|integer',
+                'brand'=>'required|integer|not_in:0',
+
+            ],[
+                'item.required' =>'El item es obligatorio.',
+                'item.min' => 'El item debe tener al menos 3 caracteres.',
+                'item.max' => 'El item no debe exceder a los 200 caracteres.',
+                'code.required' =>'El código es obligatorio.',
+                'code.min' => 'El código debe tener al menos 3 caracteres.',
+                'code.max' => 'El código no debe exceder a los 200 caracteres.',
+                'brand.integer' => 'Debe seleccionar una marca',
+
+            ]);
+            if ($dato->fails())
+            {
+                return response()->json(['errors'=>$dato->errors()]);
+            }
+            else{
+                $storage = new Warehouse();
+                $storage->item = ucfirst($request->item);
+                $storage->code = strtoupper($request->code);
+                $storage->color = ucfirst($request->color);
+                $storage->quantity = $request->quantity;
+                $storage->description = ucfirst($request->description);
+                $storage->brand_id = $request->brand;
+                $storage->saveOrFail();
+                $rec = new Record();
+                $rec->warehouse_id = $storage->id;
+                $rec->quantity = $storage->quantity;
+                $rec->saveOrFail();
+            }
         }
-        return back();
+            return back();
     }
 
         /**
