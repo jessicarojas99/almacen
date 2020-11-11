@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 class ReceiptController extends Controller
 {
@@ -59,26 +60,42 @@ class ReceiptController extends Controller
         // try {
         //     DB::beginTransaction();
         //code...
-        $receipt = new Receipt();
-        $receipt->code = "CF31";
-        $receipt->responsable = ucwords($request->responsable);
-        $receipt->delivery_date = $request->delivery;
-        $receipt->return_date = $request->return;
-        $receipt->user_id = Auth::id();
-        $receipt->saveOrFail();
+        $dato = Validator::make($request->all(), [
+            'responsable' => 'required|min:3|max:200',
+            'delivery' => 'required',
+        ],[
+            'responsable.required' =>'El campo responsable es obligatorio.',
+            'responsable.min' => 'El responsable debe tener al menos 3 caracteres.',
+            'responsable.max' => 'El responsable no debe exceder a los 200 caracteres.',
+            'delivery.required' =>'La fecha de entrega es obligatoria.',
+        ]);
+        if ($dato->fails())
+        {
+            return response()->json(['errors'=>$dato->errors()]);
+        }
+        else{
 
-        $idDetail = $request->idDetailValue;
-        $cont = 0;
+            $receipt = new Receipt();
+            $receipt->code = "CF31";
+            $receipt->responsable = ucwords($request->responsable);
+            $receipt->delivery_date = $request->delivery;
+            $receipt->return_date = $request->return;
+            $receipt->user_id = Auth::id();
+            $receipt->saveOrFail();
 
-        while ($cont < count($idDetail)) {
-            $item = Deposit::find($idDetail[$cont]);
-            $item->state = "No disponible";
-            $item->saveOrFail();
-            $detail = new Receipt_detail();
-            $detail->deposit_id = $idDetail[$cont];
-            $detail->receipt_id = $receipt->id;
-            $detail->saveOrFail();
-            $cont = $cont + 1;
+            $idDetail = $request->idDetailValue;
+            $cont = 0;
+
+            while ($cont < count($idDetail)) {
+                $item = Deposit::find($idDetail[$cont]);
+                $item->state = "No disponible";
+                $item->saveOrFail();
+                $detail = new Receipt_detail();
+                $detail->deposit_id = $idDetail[$cont];
+                $detail->receipt_id = $receipt->id;
+                $detail->saveOrFail();
+                $cont = $cont + 1;
+            }
         }
 
         // DB::commit();

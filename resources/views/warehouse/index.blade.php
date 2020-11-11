@@ -117,16 +117,12 @@
                             showCancelButton: true,
                             preConfirm: function() {
                                 return new Promise((resolve, reject) => {
-                                    // get your inputs using their placeholder or maybe add IDs to them
                                     resolve({
                                         Motivo: $('#txtMotivo').val()
-
                                     });
                                 });
                             }
                         }).then((data) => {
-                            // your input data object will be usable from here
-                            console.log(data.value.Motivo);
                             $.ajax({
                                 url:"/almacen/eliminar/"+idRow,
                                 data:
@@ -187,9 +183,8 @@
             document.getElementById("txtCode").disabled =false;
             document.getElementById("txtQuantity").min =1;
             document.getElementById('marcadiv').style.display="none";
+            ValidationClear();
         })
-
-
     });
 
 </script>
@@ -222,7 +217,7 @@
                     description:description,
                     _token:_token
                 },
-                success:function (response) {
+                success:function (data) {
                     $('#warehouseModal').modal('hide');
                     $('#warehouseForm')[0].reset();
                     Swal.fire({
@@ -266,23 +261,77 @@
                     brand:brand,
                     _token:_token
                 },
-                success:function (response) {
-                    $('#warehouseModal').modal('hide');
-                    $('#warehouseForm')[0].reset();
-                    Swal.fire({
-                        title: 'Completado',
-                        text: 'Registrado con exito!',
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                    if(name!=""){
-                        location.reload(true);
+                success:function (data) {
+                    var element = document.getElementById("warehouseForm");
+                    var item = document.getElementById("txtItem");
+                    var brand = document.getElementById("txtBrand");
+                    var code = document.getElementById("txtCode");
+                    var quantity = document.getElementById("txtQuantity");
+                    var name1 = document.getElementById("brand");
+                    if(data.errors) {
+                        //element.classList.add("was-validated");
+                        if(data.errors.item){
+                                item.classList.add("is-invalid");
+                                document.getElementById('errorItem').innerHTML = data.errors.item[0];
+                            }
+                            else{
+                                item.classList.remove("is-invalid");
+                            }
+
+                        if(data.errors.code){
+                            code.classList.add("is-invalid");
+                            document.getElementById('errorCode').innerHTML = data.errors.code[0];
+                        }
+                        else{
+                            code.classList.remove("is-invalid");
+                        }
+                        if(data.errors.quantity){
+                            quantity.classList.add("is-invalid");
+                            document.getElementById('errorCantidad').innerHTML = data.errors.quantity[0];
+                        }
+                        if(data.errors.name){
+                            name1.classList.add("is-invalid");
+                            document.getElementById('errorMarca').innerHTML = data.errors.name;
+                            var marcaselect = document.getElementById('txtBrand').disabled = false;
+                            var brandname=document.getElementById("brand");
+                            brandname.disabled = true;
+                            brandname.value ="";
+                        }
+                        else{
+
+                        }
+                        if(data.errors.brand){
+                            brand.classList.add("is-invalid");
+                            document.getElementById('errorMarcaS').innerHTML = data.errors.brand[0];
+                        }
+                        else{
+                            brand.classList.remove("is-invalid");
+                        }
+
                     }
-                    else
-                    {
-                        $('#warehouseTable').DataTable().ajax.reload();
+                    else{
+                        $('#warehouseModal').modal('hide');
+                        ValidationClear();
+                        document.getElementById("brand").disabled = false;
+                        document.getElementById('marcadiv').style.display="none";
+                        $('#warehouseForm')[0].reset();
+                        Swal.fire({
+                            title: 'Completado',
+                            text: 'Registrado con exito!',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        if(name != ""){
+                            location.reload(true);
+                        }
+                        else
+                        {
+                            $('#warehouseTable').DataTable().ajax.reload();
+                        }
                     }
+
+
 
                 },
                 error: data =>  {
@@ -300,12 +349,10 @@
 </script>
 <script>
     function showItem(id){
-        console.log(id);
         var tablaDatos= $("#tableinfo");
         $.ajax({
             url:"/almacen/mostrar/"+id,
             success:function(data){
-                console.log(data)
                 var description= document.getElementById("lblDescription");
                 var color= document.getElementById("lblColor");
                 document.getElementById("lblItem").innerHTML =data[0].item;
@@ -339,11 +386,21 @@
 </script>
 
 <script>
-        $('#add-brand').click(function () {
+
+    $('#add-brand').click(function () {
             var marca = document.getElementById('marcadiv');
             var marcaselect = document.getElementById('txtBrand').disabled = true;
+            document.getElementById("brand").disabled = false;
             marca.style.display = '';
     });
+
+    function ValidationClear(){
+        document.getElementById("txtItem").classList.remove("is-invalid");
+        document.getElementById("txtBrand").classList.remove("is-invalid");
+        document.getElementById("txtCode").classList.remove("is-invalid");
+        document.getElementById("txtQuantity").classList.remove("is-invalid");
+        document.getElementById("brand").classList.remove("is-invalid");
+    }
 </script>
 
 @endsection

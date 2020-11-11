@@ -1,6 +1,6 @@
 
-<div class="modal fade" id="depositModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <form id="depositForm">
+<div class="modal fade" id="depositModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static" aria-hidden="true">
+    <form id="depositForm"  novalidate autocomplete="off">
         @csrf
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -19,12 +19,13 @@
                     <div class="form-group">
                         <label for="txtItem"><span style="color: red">*</span>Item</label>
                         <input type="text" class="form-control" id="txtItem" placeholder="Introduzca el item">
+                        <div class="invalid-feedback" id="errorItem"></div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col">
                             <label for="txtBrand"><span style="color: red">*</span>Marca</label>
                             <div class="input-group">
-                                <select id="txtBrand" class="form-control">
+                                <select id="txtBrand" class="custom-select" required>
                                     <option selected>Seleccion una marca</option>
                                     @foreach ($brands as $branditem)
                                         <option value="{{$branditem->id}}">{{$branditem->name}}</option>
@@ -33,16 +34,19 @@
                                 <div class="input-group-append">
                                   <button class="btn btn-success" type="button" id="add-brand"><i class="fa fa-plus" aria-hidden="true"></i></button>
                                 </div>
+                                <div class="invalid-feedback" id="errorBrandS"></div>
                               </div>
                         </div>
                         <div class="form-group col">
                             <label for="txtCode"><span style="color: red">*</span>Código</label>
                             <input type="text" class="form-control" id="txtCode" placeholder="Introduzca el codigo">
+                            <div class="invalid-feedback" id="errorCode"></div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-6" style="display: none" id="marcadiv">
                             <input type="text" class="form-control" id="brand" placeholder="Introduzca una nueva marca">
+                            <div class="invalid-feedback" id="errorBrand"></div>
                         </div>
                     </div>
                     <div class="form-row">
@@ -59,13 +63,15 @@
                         <div class="form-group col">
                             <label for="txtCondition"><span style="color: red">*</span>Condición</label>
                             <input type="text" class="form-control" id="txtCondition" placeholder="Introduzca la condicion del item">
+                            <div class="invalid-feedback" id="errorCondition"></div>
                         </div>
                         <div class="form-group col">
                             <label for="txtState"><span style="color: red">*</span>Estado</label>
-                            <select id="txtState" class="form-control">
-                                <option selected value="Disponible">Disponible</option>
-                                <option value="No Disponible">No disponible</option>
+                            <select id="txtState" class="custom-select">
+                                <option value="Disponible">Disponible</option>
+                                <option value="No disponible">No disponible</option>
                             </select>
+                            <div class="invalid-feedback" id="errorState"></div>
                         </div>
                     </div>
                     <div class="form-group">

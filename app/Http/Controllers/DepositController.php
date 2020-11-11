@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Brand;
 use App\Deposit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class DepositController extends Controller
 {
@@ -43,31 +44,77 @@ class DepositController extends Controller
     {
         if($request->name!=""){
 
-            $marca = new Brand();
-            $marca ->name = ucfirst($request->name);
-            $marca->saveOrFail();
-            $storage = new Deposit();
-            $storage->item = ucfirst($request->item);
-            $storage->code = strtoupper($request->code);
-            $storage->size = $request->size;
-            $storage->processor = strtoupper($request->processor);
-            $storage->condition = ucfirst($request->condition);
-            $storage->state = $request->state;
-            $storage->description = ucfirst($request->description);
-            $storage->brand_id = $marca->id;
-            $storage->saveOrFail();
+            $dato = Validator::make($request->all(), [
+                'item' => 'required|min:3|max:200',
+                'code' => 'required|min:3|max:200',
+                'name'=> 'unique:brands',
+                'condition'=>'required|min:3|max:200',
+
+            ],[
+                'item.required' =>'El item es obligatorio.',
+                'item.min' => 'El item debe tener al menos 3 caracteres.',
+                'item.max' => 'El item no debe exceder a los 200 caracteres.',
+                'code.required' =>'El código es obligatorio.',
+                'code.min' => 'El código debe tener al menos 3 caracteres.',
+                'code.max' => 'El código no debe exceder a los 200 caracteres.',
+                'name.unique' => 'El nombre ya existe.'
+
+            ]);
+            if ($dato->fails())
+            {
+                return response()->json(['errors'=>$dato->errors()]);
+            }
+            else{
+
+                $marca = new Brand();
+                $marca ->name = ucfirst($request->name);
+                $marca->saveOrFail();
+                $storage = new Deposit();
+                $storage->item = ucfirst($request->item);
+                $storage->code = strtoupper($request->code);
+                $storage->size = $request->size;
+                $storage->processor = strtoupper($request->processor);
+                $storage->condition = ucfirst($request->condition);
+                $storage->state = $request->state;
+                $storage->description = ucfirst($request->description);
+                $storage->brand_id = $marca->id;
+                $storage->saveOrFail();
+            }
         }
         else{
-            $storage = new Deposit();
-            $storage->item = ucfirst($request->item);
-            $storage->code = strtoupper($request->code);
-            $storage->size = $request->size;
-            $storage->processor = strtoupper($request->processor);
-            $storage->condition = ucfirst($request->condition);
-            $storage->state = $request->state;
-            $storage->description = ucfirst($request->description);
-            $storage->brand_id = $request->brand;
-            $storage->saveOrFail();
+            $dato = Validator::make($request->all(), [
+                'item' => 'required|min:3|max:200',
+                'code' => 'required|min:3|max:200',
+                'brand'=>'required|integer|not_in:0',
+                'condition'=>'required|min:3|max:200',
+                'state'=>'required',
+
+            ],[
+                'item.required' =>'El item es obligatorio.',
+                'item.min' => 'El item debe tener al menos 3 caracteres.',
+                'item.max' => 'El item no debe exceder a los 200 caracteres.',
+                'code.required' =>'El código es obligatorio.',
+                'code.min' => 'El código debe tener al menos 3 caracteres.',
+                'code.max' => 'El código no debe exceder a los 200 caracteres.',
+                'brand.integer' => 'Debe seleccionar una marca',
+
+            ]);
+            if ($dato->fails())
+            {
+                return response()->json(['errors'=>$dato->errors()]);
+            }
+            else{
+                $storage = new Deposit();
+                $storage->item = ucfirst($request->item);
+                $storage->code = strtoupper($request->code);
+                $storage->size = $request->size;
+                $storage->processor = strtoupper($request->processor);
+                $storage->condition = ucfirst($request->condition);
+                $storage->state = $request->state;
+                $storage->description = ucfirst($request->description);
+                $storage->brand_id = $request->brand;
+                $storage->saveOrFail();
+            }
         }
         return back();
     }
@@ -108,16 +155,31 @@ class DepositController extends Controller
      */
     public function update(Request $request, Deposit $deposit)
     {
-        $item = Deposit::find($request->id);
-        $item->item = ucfirst($request->item);
-        $item->code = strtoupper($request->code);
-        $item->size = $request->size;
-        $item->processor = strtoupper($request->processor);
-        $item->condition = ucfirst($request->condition);
-        $item->state = $request->state;
-        $item->description = ucfirst($request->description);
-        $item->brand_id = $request->brand;
-        $item->saveOrFail();
+
+        $dato = Validator::make($request->all(), [
+            'condition'=>'required|min:3|max:200',
+
+        ],[
+            'condition' => 'El nombre ya existe.'
+
+        ]);
+        if ($dato->fails())
+        {
+            return response()->json(['errors'=>$dato->errors()]);
+        }
+        else{
+
+            $item = Deposit::find($request->id);
+            $item->item = ucfirst($request->item);
+            $item->code = strtoupper($request->code);
+            $item->size = $request->size;
+            $item->processor = strtoupper($request->processor);
+            $item->condition = ucfirst($request->condition);
+            $item->state = $request->state;
+            $item->description = ucfirst($request->description);
+            $item->brand_id = $request->brand;
+            $item->saveOrFail();
+        }
         return back();
     }
 

@@ -115,18 +115,12 @@
                             showCancelButton: true,
                             preConfirm: function() {
                                 return new Promise((resolve, reject) => {
-                                    // get your inputs using their placeholder or maybe add IDs to them
                                     resolve({
                                         Motivo: $('#txtMotivo').val()
-
                                     });
-
-                                    // maybe also reject() on some condition
                                 });
                             }
                         }).then((data) => {
-                            // your input data object will be usable from here
-                            console.log(data.value.Motivo);
                             $.ajax({
                                 url:"/deposito/eliminar/"+idRow,
                                 data:
@@ -190,6 +184,7 @@
             document.getElementById("txtProcessor").disabled=false;
             document.getElementById("modalTitle").innerHTML ='Registrar';
             document.getElementById('marcadiv').style.display="none";
+            ValidationClear();
         })
 
 
@@ -214,6 +209,7 @@
         var _token =$("input[name=_token]").val();
 
         if(id !=""){
+
             $.ajax({
                 url:"{{route('depositoUpdate')}}",
                 type: "POST",
@@ -229,24 +225,38 @@
                     description:description,
                     _token:_token
                 },
-                success:function (response) {
-                    $('#depositModal').modal('hide');
-                    $('#depositForm')[0].reset();
-                    Swal.fire({
-                        title: 'Completado',
-                        icon: 'success',
-                        text: 'Actualizado con exito!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    document.getElementById("txtId").value="";
-                    document.getElementById("modalTitle").innerHTML ='Registrar';
-                    document.getElementById("txtItem").disabled =false;
-                    document.getElementById("txtBrand").disabled =false;
-                    document.getElementById("txtCode").disabled =false;
-                    document.getElementById("txtSize").disabled=false;
-                    document.getElementById("txtProcessor").disabled=false;
-                    $('#depositTable').DataTable().ajax.reload();
+                success:function (data) {
+                    var vcondition = document.getElementById("txtCondition");
+                    if(data.errors) {
+                        if(data.errors.condition){
+                            vcondition.classList.add("is-invalid");
+                            document.getElementById('errorCondition').innerHTML = data.errors.condition[0];
+                        }
+                        else{
+                            vcondition.classList.remove("is-invalid");
+                        }
+                    }
+                    else{
+
+                        $('#depositModal').modal('hide');
+                        ValidationClear();
+                        $('#depositForm')[0].reset();
+                        Swal.fire({
+                            title: 'Completado',
+                            icon: 'success',
+                            text: 'Actualizado con exito!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        document.getElementById("txtId").value="";
+                        document.getElementById("modalTitle").innerHTML ='Registrar';
+                        document.getElementById("txtItem").disabled =false;
+                        document.getElementById("txtBrand").disabled =false;
+                        document.getElementById("txtCode").disabled =false;
+                        document.getElementById("txtSize").disabled=false;
+                        document.getElementById("txtProcessor").disabled=false;
+                        $('#depositTable').DataTable().ajax.reload();
+                    }
                 },
                 error: data =>  {
                     Swal.fire({
@@ -275,22 +285,76 @@
                     description:description,
                     _token:_token
                 },
-                success:function (response) {
-                    $('#depositModal').modal('hide');
-                    $('#depositForm')[0].reset();
-                    Swal.fire({
-                        title: 'Completado',
-                        text: 'Registrado con éxito!',
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    if(name!=""){
-                        location.reload(true);
+                success:function (data) {
+                    var vitem = document.getElementById("txtItem");
+                    var vbrand = document.getElementById("txtBrand");
+                    var vcode = document.getElementById("txtCode");
+                    var vcondition = document.getElementById("txtCondition");
+                    var vstate= document.getElementById("txtState");
+                    var vname = document.getElementById("brand");
+                    if(data.errors) {
+                        if(data.errors.item){
+                                vitem.classList.add("is-invalid");
+                                document.getElementById('errorItem').innerHTML = data.errors.item[0];
+                            }
+                            else{
+                                vitem.classList.remove("is-invalid");
+                            }
+
+                        if(data.errors.code){
+                            vcode.classList.add("is-invalid");
+                            document.getElementById('errorCode').innerHTML = data.errors.code[0];
+                        }
+                        else{
+                            vcode.classList.remove("is-invalid");
+                        }
+                        if(data.errors.condition){
+                            vcondition.classList.add("is-invalid");
+                            document.getElementById('errorCondition').innerHTML = data.errors.condition[0];
+                        }
+                        else{
+                            vcondition.classList.remove("is-invalid");
+                        }
+                        if(data.errors.name){
+                            vname.classList.add("is-invalid");
+                            document.getElementById('errorBrand').innerHTML = data.errors.name[0];
+                            var marcaselect = document.getElementById('txtBrand');
+                            marcaselect.disabled=false;
+                            var brandname=document.getElementById("brand");
+                            brandname.disabled = true;
+                            brandname.value ="";
+                        }
+                        else{
+                            vname.classList.remove("is-invalid");
+                        }
+                        if(data.errors.brand){
+                            vbrand.classList.add("is-invalid");
+                            document.getElementById('errorBrandS').innerHTML = data.errors.brand[0];
+                        }
+                        else{
+                            vbrand.classList.remove("is-invalid");
+                        }
                     }
-                    else
-                    {
-                        $('#depositTable').DataTable().ajax.reload();
+                    else{
+                        $('#depositModal').modal('hide');
+                        ValidationClear();
+                        document.getElementById("brand").disabled = false;
+                        document.getElementById('marcadiv').style.display="none";
+                        $('#depositForm')[0].reset();
+                        Swal.fire({
+                            title: 'Completado',
+                            text: 'Registrado con éxito!',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        if(name!=""){
+                            location.reload(true);
+                        }
+                        else
+                        {
+                            $('#depositTable').DataTable().ajax.reload();
+                        }
                     }
                 },
                 error: data =>  {
@@ -308,13 +372,9 @@
 </script>
 <script>
     function showItem(id){
-        console.log(id);
-
         $.ajax({
             url:"/deposito/mostrar/"+id,
             success:function(data){
-                console.log(data)
-
                 var procesador=document.getElementById("lblprocessor");
                 var tamanio=document.getElementById("lblsize");
                 var description=document.getElementById("lblDescription");
@@ -354,7 +414,17 @@
     $('#add-brand').click(function () {
         var marca = document.getElementById('marcadiv');
         var marcaselect = document.getElementById('txtBrand').disabled = true;
+        var brandname=document.getElementById("brand");
+        brandname.disabled = false;
         marca.style.display = '';
 });
+
+function ValidationClear(){
+            document.getElementById("txtItem").classList.remove("is-invalid");
+            document.getElementById("txtBrand").classList.remove("is-invalid");
+            document.getElementById("txtCode").classList.remove("is-invalid");
+            document.getElementById("txtCondition").classList.remove("is-invalid");
+            document.getElementById("brand").classList.remove("is-invalid");
+}
 </script>
 @endsection
