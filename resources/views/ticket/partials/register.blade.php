@@ -20,6 +20,16 @@
                         <div class="invalid-feedback" id="errorResponsable"></div>
                     </div>
                     <div class="form-group">
+                        <label for="txtUnit"><span style="color: red">*</span>Unidad</label>
+                        <select id="txtUnit" class="custom-select">
+                            <option selected>Seleccione una unidad</option>
+                            @foreach ($units as $unit)
+                                <option value="{{$unit}}">{{$unit}}</option>
+                            @endforeach
+                          </select>
+                        <div class="invalid-feedback" id="errorResponsable"></div>
+                    </div>
+                    <div class="form-group">
                         <label for="txtDescription">Buscar Item</label>
                         <div class="input-group mb-3">
                             {{-- <input type="text" class="form-control" id="txtItem" placeholder="Introduzca el item"> --}}
@@ -61,7 +71,7 @@
                 </div>
                 {{-- Botones footer --}}
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary btn-sm" id="btnStoreDetail">Guardar</button>
+                    <button type="button" class="btn btn-primary btn-sm" id="btnStoreDetail" disabled>Guardar</button>
                 </div>
             </div>
         </div>

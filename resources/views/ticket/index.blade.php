@@ -90,7 +90,7 @@
 </script>
 <script>
     var cont=0;
-    // Abrir modal
+    // Elegir Item
     $('#btnItemSelect').click(function () {
         var item =$('#txtItem').val();
         $.ajax({
@@ -114,6 +114,7 @@
         cont++;
         $('#detail').append(fila);
         $("#divItemSelect").children().prop('disabled',true);
+        $("#btnStoreDetail").prop('disabled',false);
     });
 
     function eliminar(index) {
@@ -124,6 +125,7 @@
     $('#btnStoreDetail').click(function () {
         var _token =$("input[name=_token]").val();
         var responsable=$('#txtResponsable').val();
+        var unit=$('#txtUnit').val();
         var quantityDetailValue=[];
         var idDetailValue=[];
         var quantityDetail=document.getElementsByName('quantityItem[]');
@@ -140,6 +142,7 @@
             type:"POST",
             data:{
                 responsable:responsable,
+                unit:unit,
                 quantityDetailValue:quantityDetailValue,
                 idDetailValue:idDetailValue,
                 _token:_token
@@ -159,6 +162,9 @@
                         $('#ticketModal').modal('hide');
                         ValidationClear();
                         $('#ticketForm')[0].reset();
+                        $('#detail').empty();
+                        document.getElementById('lblItem').innerHTML="Item encontrado";
+                        document.getElementById('subItem').innerHTML="";
                         Swal.fire({
                                 title: 'Completado',
                                 text: 'Registrado con exito!',
@@ -183,6 +189,9 @@
     })
     $('#close').click(function () {
         $('#ticketForm')[0].reset();
+        $('#detail').empty();
+        document.getElementById('lblItem').innerHTML="Item encontrado";
+        document.getElementById('subItem').innerHTML="";
         ValidationClear();
     })
 </script>

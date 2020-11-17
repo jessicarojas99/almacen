@@ -111,6 +111,7 @@
     $('#btnStoreDetail').click(function () {
         var _token =$("input[name=_token]").val();
         var responsable=$('#txtResponsable').val();
+        var unit=$('#txtUnit').val();
         var delivery=$('#txtDelivery').val();
         var returnDate=$('#txtReturn').val();
         var idDetailValue=[];
@@ -125,6 +126,7 @@
             type:"POST",
             data:{
                 responsable:responsable,
+                unit:unit,
                 delivery:delivery,
                 return:returnDate,
                 idDetailValue:idDetailValue,
@@ -153,6 +155,7 @@
                     $('#receiptModal').modal('hide');
                     ValidationClear();
                     $('#receiptForm')[0].reset();
+                    $('#detail').empty();
                     Swal.fire({
                             title: 'Completado',
                             text: 'Registrado con exito!',
@@ -177,6 +180,7 @@
     })
     $('#close').click(function () {
         $('#receiptForm')[0].reset();
+        $('#detail').empty();
         ValidationClear();
     })
 </script>

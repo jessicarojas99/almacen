@@ -21,10 +21,28 @@ class ReceiptController extends Controller
      */
     public function index()
     {
+        $units = [
+            "Gerencia General",
+            "Unidad de Adquisiciones",
+            "Unidad de RRHH",
+            "Unidad Administrativa",
+            "Unidad Financiera",
+            "Unidad Contable",
+            "Gerencia Comercial",
+            "Gerencia de Planificacion y Proyectos",
+            "Unidad de Proyectos",
+            "Unidad de Analisis Operativo",
+            "Unidad de Obras Civiles",
+            "Unidad de TI",
+            "Unidad de Seguridad Industrial",
+            "Unidad de Auditoria Interna",
+            "Unidad de Transparencia",
+            "Unidad de Asesoria Legal"
+        ];
         $items = Deposit::select(DB::raw("CONCAT(deposits.item,' - ',deposits.code) AS itemCode"), 'deposits.id')
             ->where('deposits.state', '=', 'Disponible')
             ->get();
-        return view('receipt.index', compact('items'));
+        return view('receipt.index', compact('items', 'units'));
     }
 
     public function itemSelected($id)
@@ -42,7 +60,7 @@ class ReceiptController extends Controller
         return Datatables()->of($receipt)
             ->addColumn('action', function ($receipt) {
                 $acciones = '<a href="javascript:void(0)" onclick="showItem(' . $receipt->Rid . ')" class="btn btn-info btn-sm"><i class="fas fa-info-circle"></i> Detalle</a>
-                <a href="/prestamo/imprimir/'.$receipt->Rid.'" target="_blank" class="btn btn-dark btn-sm bgVerde"><i class="fas fa-print"></i> Recibo</a>';
+                <a href="/prestamo/imprimir/' . $receipt->Rid . '" target="_blank" class="btn btn-dark btn-sm bgVerde"><i class="fas fa-print"></i> Recibo</a>';
                 return $acciones;
             })
             ->rawColumns(['action'])
@@ -63,21 +81,20 @@ class ReceiptController extends Controller
         $dato = Validator::make($request->all(), [
             'responsable' => 'required|min:3|max:200',
             'delivery' => 'required',
-        ],[
-            'responsable.required' =>'El campo responsable es obligatorio.',
+        ], [
+            'responsable.required' => 'El campo responsable es obligatorio.',
             'responsable.min' => 'El responsable debe tener al menos 3 caracteres.',
             'responsable.max' => 'El responsable no debe exceder a los 200 caracteres.',
-            'delivery.required' =>'La fecha de entrega es obligatoria.',
+            'delivery.required' => 'La fecha de entrega es obligatoria.',
         ]);
-        if ($dato->fails())
-        {
-            return response()->json(['errors'=>$dato->errors()]);
-        }
-        else{
+        if ($dato->fails()) {
+            return response()->json(['errors' => $dato->errors()]);
+        } else {
 
             $receipt = new Receipt();
             $receipt->code = "CF31";
             $receipt->responsable = ucwords($request->responsable);
+            $receipt->unit = $request->unit;
             $receipt->delivery_date = $request->delivery;
             $receipt->return_date = $request->return;
             $receipt->user_id = Auth::id();
@@ -113,26 +130,26 @@ class ReceiptController extends Controller
      */
     public function show($id)
     {
-        $receipt = Receipt_detail::join("receipts","receipts.id","=","receipt_details.receipt_id")
-        ->join("users", "receipts.user_id", "=", "users.id")
-        ->join("deposits","deposits.id","=","receipt_details.deposit_id")
-        ->select(DB::raw("CONCAT(deposits.item,' - ',deposits.code) AS itemCode"),'receipts.id as Rid', 'receipts.code as Rcode', 'users.name as Uname', 'responsable','delivery_date','return_date')
-        ->where("receipts.id", "=", $id)
-        ->get();
+        $receipt = Receipt_detail::join("receipts", "receipts.id", "=", "receipt_details.receipt_id")
+            ->join("users", "receipts.user_id", "=", "users.id")
+            ->join("deposits", "deposits.id", "=", "receipt_details.deposit_id")
+            ->select(DB::raw("CONCAT(deposits.item,' - ',deposits.code) AS itemCode"), 'receipts.id as Rid', 'receipts.code as Rcode', 'users.name as Uname', 'responsable', 'delivery_date', 'return_date')
+            ->where("receipts.id", "=", $id)
+            ->get();
 
         return response()->json($receipt);
     }
     public function printReceipt($id)
     {
-        $receipt = Receipt_detail::join("receipts","receipts.id","=","receipt_details.receipt_id")
-        ->join("users", "receipts.user_id", "=", "users.id")
-        ->join("deposits","deposits.id","=","receipt_details.deposit_id")
-        ->select(DB::raw("CONCAT(deposits.item,' - ',deposits.code) AS itemCode"),'receipts.id as Rid', 'receipts.code as Rcode', 'users.name as Uname', 'responsable','delivery_date','return_date')
-        ->where("receipts.id", "=", $id)
-        ->get();
+        $receipt = Receipt_detail::join("receipts", "receipts.id", "=", "receipt_details.receipt_id")
+            ->join("users", "receipts.user_id", "=", "users.id")
+            ->join("deposits", "deposits.id", "=", "receipt_details.deposit_id")
+            ->select(DB::raw("CONCAT(deposits.item,' - ',deposits.code) AS itemCode"), 'receipts.id as Rid', 'receipts.code as Rcode', 'users.name as Uname', 'responsable', 'delivery_date', 'return_date')
+            ->where("receipts.id", "=", $id)
+            ->get();
 
-        $now=Carbon::now();
-        $pdf= PDF::loadView('receipt.recibos',compact('receipt','now'));
+        $now = Carbon::now();
+        $pdf = PDF::loadView('receipt.recibos', compact('receipt', 'now'));
         return $pdf->stream('recibo.pdf');
     }
 
