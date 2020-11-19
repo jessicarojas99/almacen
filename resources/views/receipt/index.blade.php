@@ -135,6 +135,7 @@
             success:function(data){
                 var vresponsable = document.getElementById("txtResponsable");
                 var vdelivery = document.getElementById("txtDelivery");
+                console.log(data);
                 if(data.errors) {
                     if(data.errors.responsable){
                         vresponsable.classList.add("is-invalid");
@@ -143,6 +144,7 @@
                     else{
                        vresponsable.classList.remove("is-invalid");
                     }
+
                     if(data.errors.delivery){
                         vdelivery.classList.add("is-invalid");
                         document.getElementById('errorDelivery').innerHTML = data.errors.delivery[0];
@@ -193,6 +195,7 @@
                 document.getElementById("lblCodigo").innerHTML =data[0].Rcode;
                 document.getElementById("lblresponsable").innerHTML =data[0].Uname;
                 document.getElementById("lblEntrega").innerHTML =data[0].responsable;
+                document.getElementById("lblUnidad").innerHTML =data[0].unit;
                 document.getElementById("lblEntregaFecha").innerHTML =data[0].delivery_date;
                 if(data[0].return_date!=null && data[0].return_date!=""){
                     document.getElementById("fechadevolucion").style.display="";
