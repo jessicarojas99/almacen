@@ -98,6 +98,7 @@
       <div style="width:80%" class="datos">
         <div style="padding-top:7px;padding-left:20px;width:100%;">
           <div><strong>Código:  </strong>{{$receipt[0]->Rcode}}</div>
+          <div><strong>Unidad:  </strong>{{$receipt[0]->unit}}</div>
           <div><strong>Entregado a:  </strong>{{$receipt[0]->responsable}}</div>
           <div><strong>Responsable:  </strong> {{$receipt[0]->Uname}}</div>
          <div><strong>Fecha de entrega:</strong> {{$receipt[0]->delivery_date->toDateString()}}</div>
@@ -129,12 +130,7 @@
         <hr>
         <p>{{$receipt[0]->Uname}}</p>
     </div>
-</div><br><br><br><br><br>
-<div class="firma1" id="fm3">
-    <hr>
-    <p>Encargado</p>
 </div>
-
   </body>
 
 </html>

@@ -12,9 +12,15 @@
                 </div>
                 {{-- Contenido --}}
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label for="lblCodigo"><u>Código</u></label>
-                        <label type="text" class="form-control border-0 font-weight-normal" id="lblCodigo"></label>
+                    <div class="form-group row">
+                        <div class="col">
+                            <label for="lblCodigo"><u>Código</u></label>
+                            <label type="text" class="form-control border-0 font-weight-normal" id="lblCodigo"></label>
+                        </div>
+                        <div class="col">
+                            <label for="lblUnidad"><u>Unidad</u></label>
+                            <label type="text" class="form-control border-0 font-weight-normal" id="lblUnidad"></label>
+                        </div>
                     </div>
                     <div class="form-group row">
                         <div class="col">

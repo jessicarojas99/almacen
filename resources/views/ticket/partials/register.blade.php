@@ -22,12 +22,10 @@
                     <div class="form-group">
                         <label for="txtUnit"><span style="color: red">*</span>Unidad</label>
                         <select id="txtUnit" class="custom-select">
-                            <option selected>Seleccione una unidad</option>
                             @foreach ($units as $unit)
                                 <option value="{{$unit}}">{{$unit}}</option>
                             @endforeach
                           </select>
-                        <div class="invalid-feedback" id="errorResponsable"></div>
                     </div>
                     <div class="form-group">
                         <label for="txtDescription">Buscar Item</label>

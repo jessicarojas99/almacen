@@ -27,6 +27,7 @@ Auth::routes();
 Route::get('/home', function () {
     return view('home');
 })->name('home')->middleware('auth');
+Route::group(['middleware' => 'auth'], function () {
 
 Route::get('/almacen', 'WarehouseController@index')->name('almacen');
 Route::get('/almacen/lista', 'WarehouseController@list')->name('almacenList');
@@ -63,3 +64,4 @@ Route::get('/prestamo/select/{id}', 'ReceiptController@itemSelected')->name('rec
 Route::post('/prestamo/registro', 'ReceiptController@store')->name('receiptStore');
 Route::get('/prestamo/mostrar/{id}', 'ReceiptController@show')->name('receiptShow');
 Route::get('/prestamo/imprimir/{id}', 'ReceiptController@printReceipt')->name('receiptPrint');
+});

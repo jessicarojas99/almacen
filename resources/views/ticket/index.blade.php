@@ -202,6 +202,7 @@
             url:"/comprobante/mostrar/"+id,
             success:function(data){
                 document.getElementById("lblCodigo").innerHTML =data[0].Tcode;
+                document.getElementById("lblUnidad").innerHTML =data[0].unit;
                 document.getElementById("lblresponsable").innerHTML =data[0].Uname;
                 document.getElementById("lblEntrega").innerHTML =data[0].responsable;
                 $('#ticketModalInfo').modal('show');

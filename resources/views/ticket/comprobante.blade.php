@@ -129,6 +129,7 @@
 
           <div><strong>Entregado a:  </strong>{{$ticket[0]->responsable}}</div>
           <div><strong>Responsable:  </strong> {{$ticket[0]->Uname}}</div>
+          <div><strong>Unidad:  </strong> {{$ticket[0]->unit}}</div>
           <div><strong>Fecha:</strong> {{$now->format('d/m/Y')}}</div>
           <div><strong>Código:  </strong>{{$ticket[0]->Tcode}}</div>
 
@@ -168,10 +169,6 @@
         <hr>
         <p>{{$ticket[0]->Uname}}</p>
     </div>
-</div><br><br><br><br><br>
-<div class="firma1" id="fm3">
-    <hr>
-    <p>Encargado</p>
 </div>
 
   </body>
