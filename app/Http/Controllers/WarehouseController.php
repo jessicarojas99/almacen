@@ -45,31 +45,29 @@ class WarehouseController extends Controller
      */
     public function store(Request $request)
     {
-        if($request->name!=""){
+        if ($request->name != "") {
 
             $dato = Validator::make($request->all(), [
                 'item' => 'required|min:3|max:200',
                 'code' => 'required|min:3|max:200',
                 'quantity' => 'required|integer',
-                'name'=> 'unique:brands',
+                'name' => 'unique:brands',
 
-            ],[
-                'item.required' =>'El item es obligatorio.',
+            ], [
+                'item.required' => 'El item es obligatorio.',
                 'item.min' => 'El item debe tener al menos 3 caracteres.',
                 'item.max' => 'El item no debe exceder a los 200 caracteres.',
-                'code.required' =>'El código es obligatorio.',
+                'code.required' => 'El código es obligatorio.',
                 'code.min' => 'El código debe tener al menos 3 caracteres.',
                 'code.max' => 'El código no debe exceder a los 200 caracteres.',
                 'name.unique' => 'El nombre ya existe.'
 
             ]);
-            if ($dato->fails())
-            {
-                return response()->json(['errors'=>$dato->errors()]);
-            }
-            else{
+            if ($dato->fails()) {
+                return response()->json(['errors' => $dato->errors()]);
+            } else {
                 $marca = new Brand();
-                $marca ->name = ucfirst($request->name);
+                $marca->name = ucfirst($request->name);
                 $marca->saveOrFail();
                 $storage = new Warehouse();
                 $storage->item = ucfirst($request->item);
@@ -84,29 +82,26 @@ class WarehouseController extends Controller
                 $rec->quantity = $storage->quantity;
                 $rec->saveOrFail();
             }
-        }
-        else{
+        } else {
             $dato = Validator::make($request->all(), [
                 'item' => 'required|min:3|max:200',
                 'code' => 'required|min:3|max:200',
                 'quantity' => 'required|integer',
-                'brand'=>'required|integer|not_in:0',
+                'brand' => 'required|integer|not_in:0',
 
-            ],[
-                'item.required' =>'El item es obligatorio.',
+            ], [
+                'item.required' => 'El item es obligatorio.',
                 'item.min' => 'El item debe tener al menos 3 caracteres.',
                 'item.max' => 'El item no debe exceder a los 200 caracteres.',
-                'code.required' =>'El código es obligatorio.',
+                'code.required' => 'El código es obligatorio.',
                 'code.min' => 'El código debe tener al menos 3 caracteres.',
                 'code.max' => 'El código no debe exceder a los 200 caracteres.',
                 'brand.integer' => 'Debe seleccionar una marca',
 
             ]);
-            if ($dato->fails())
-            {
-                return response()->json(['errors'=>$dato->errors()]);
-            }
-            else{
+            if ($dato->fails()) {
+                return response()->json(['errors' => $dato->errors()]);
+            } else {
                 $storage = new Warehouse();
                 $storage->item = ucfirst($request->item);
                 $storage->code = strtoupper($request->code);
@@ -121,10 +116,10 @@ class WarehouseController extends Controller
                 $rec->saveOrFail();
             }
         }
-            return back();
+        return back();
     }
 
-        /**
+    /**
      * Display the specified resource.
      *
      * @param  \App\Warehouse  $warehouse
@@ -134,12 +129,11 @@ class WarehouseController extends Controller
     {
         $item = Record::join("warehouses", "records.warehouse_id", "=", "warehouses.id")
             ->join("brands", "warehouses.brand_id", "=", "brands.id")
-            ->select("warehouses.item", "brands.name as Bname", "warehouses.code", "warehouses.quantity", "records.quantity as Rquantity", "warehouses.description","warehouses.created_at as Wdate","warehouses.color","records.created_at as Rdate")
+            ->select("warehouses.item", "brands.name as Bname", "warehouses.code", "warehouses.quantity", "records.quantity as Rquantity", "warehouses.description", "warehouses.created_at as Wdate", "warehouses.color", "records.created_at as Rdate")
             ->where("records.warehouse_id", "=", $id)
             ->get();
         // $item = Record::where("records.warehouse_id", "=", $id)->get();
         return response()->json($item);
-
     }
 
     /**
@@ -164,10 +158,10 @@ class WarehouseController extends Controller
     public function update(Request $request, Warehouse $warehouse)
     {
         $item = Warehouse::find($request->id);
-        if($request->quantity != $item->quantity){
+        if ($request->quantity != $item->quantity) {
             $rec = new Record();
             $rec->warehouse_id = $item->id;
-            $rec->quantity = $item->quantity;
+            $rec->quantity = $request->quantity;
             $rec->saveOrFail();
         }
         $item->item = ucfirst($request->item);

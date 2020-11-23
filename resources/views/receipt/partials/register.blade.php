@@ -43,14 +43,14 @@
                         <div class="input-group mb-3">
                             {{-- <input type="text" class="form-control" id="txtItem" placeholder="Introduzca el item"> --}}
 
-                            <select id="txtItem" class="custom-select">
+                            <select id="txtItem" class="custom-select" onchange="cambioSelect()">
                                 <option selected>Seleccione un item</option>
                                 @foreach ($items as $item)
                                     <option value="{{$item->id}}">{{$item->itemCode}}</option>
                                 @endforeach
                               </select>
                             <div class="input-group-append">
-                                <button type="button" class="btn btn-success btn-sm" id="btnItemSelect" ><i class="fas fa-check"></i></button>
+                                <button type="button" class="btn btn-success btn-sm" id="btnItemSelect" disabled><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                     </div>
