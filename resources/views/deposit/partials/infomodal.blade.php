@@ -27,12 +27,16 @@ data-keyboard="false">
                 <div class="form-row">
                     <div class="form-group col">
                         <label for="lblCode"><u>Código</u></label>
-                        <label type="text" class="form-control border-0 font-weight-normal" id="lblCode" placeholder="Introduzca el codigo"></label>
+                        <label class="form-control border-0 font-weight-normal" id="lblCode" placeholder="Introduzca el codigo"></label>
                     </div>
                     <div class="form-group col">
                         <label for="lblQuantity"><u>Estado</u></label>
                         <label class="form-control border-0 font-weight-normal" id="lblEstado"></label>
                     </div>
+                </div>
+                <div class="form-group">
+                    <label for="lblCondition"><u>Condición</u></label>
+                    <label class="form-control border-0 font-weight-normal" id="lblCondition"></label>
                 </div>
                 <div class="form-group" style="display: none" id="size">
                     <label for="Lblsize"><u>Tamaño</u></label>

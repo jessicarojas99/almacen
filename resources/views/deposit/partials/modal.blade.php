@@ -62,7 +62,12 @@
                     <div class="form-row">
                         <div class="form-group col">
                             <label for="txtCondition"><span style="color: red">*</span>Condición</label>
-                            <input type="text" class="form-control" id="txtCondition" placeholder="Introduzca la condicion del item">
+                            <select id="txtCondition" class="custom-select">
+                                <option value="Nuevo">Nuevo</option>
+                                <option value="Bueno">Bueno</option>
+                                <option value="Regular">Regular</option>
+                                <option value="Malo">Malo</option>
+                            </select>
                             <div class="invalid-feedback" id="errorCondition"></div>
                         </div>
                         <div class="form-group col">
