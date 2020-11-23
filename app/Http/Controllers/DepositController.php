@@ -128,7 +128,7 @@ class DepositController extends Controller
     public function show($id)
     {
         $item = Deposit::join("brands", "deposits.brand_id", "=", "brands.id")
-            ->select("deposits.id as Did", "deposits.item", "brands.name as Bname", 'deposits.code', 'deposits.state', 'deposits.size','deposits.processor','deposits.description','deposits.created_at as Dcreated')
+            ->select("deposits.id as Did", "deposits.item", "brands.name as Bname", 'deposits.code','deposits.condition', 'deposits.state', 'deposits.size','deposits.processor','deposits.description','deposits.created_at as Dcreated')
             ->where("deposits.id", "=", $id)
             ->get();
         return response()->json($item);

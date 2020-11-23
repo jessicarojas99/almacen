@@ -382,6 +382,7 @@
                 document.getElementById("lblBrand").innerHTML =data[0].Bname;
                 document.getElementById("lblCode").innerHTML =data[0].code;
                 document.getElementById("lblEstado").innerHTML =data[0].state;
+                document.getElementById("lblCondition").innerHTML = data[0].condition;
 
                 if(data[0].size!=null && data[0].size!=""){
                     document.getElementById("size").style.display="";
