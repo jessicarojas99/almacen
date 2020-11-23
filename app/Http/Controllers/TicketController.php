@@ -40,6 +40,7 @@ class TicketController extends Controller
             "Unidad de Asesoria Legal"
         ];
         $items = Warehouse::select(DB::raw("CONCAT(warehouses.item,' - ',warehouses.code) AS itemCode"), 'warehouses.id')
+            ->where('warehouses.quantity', '>', 0)
             ->get();
         return view('ticket.index', compact('items', 'units'));
     }
@@ -128,7 +129,7 @@ class TicketController extends Controller
         $ticket = Ticket_detail::join("tickets", "tickets.id", "=", "ticket_details.ticket_id")
             ->join("users", "tickets.user_id", "=", "users.id")
             ->join("warehouses", "warehouses.id", "=", "ticket_details.warehouse_id")
-            ->select(DB::raw("CONCAT(warehouses.item,' - ',warehouses.code) AS Witem"), 'tickets.id as Tid', 'tickets.code as Tcode', 'users.name as Uname', 'responsable', 'warehouses.code as Wcode', 'ticket_details.quantity as Tquantity', 'ticket_details.id as TDid', 'tickets.created_at as Tcreated','unit')
+            ->select(DB::raw("CONCAT(warehouses.item,' - ',warehouses.code) AS Witem"), 'tickets.id as Tid', 'tickets.code as Tcode', 'users.name as Uname', 'responsable', 'warehouses.code as Wcode', 'ticket_details.quantity as Tquantity', 'ticket_details.id as TDid', 'tickets.created_at as Tcreated', 'unit')
             ->where("tickets.id", "=", $id)
             ->get();
 
@@ -141,7 +142,7 @@ class TicketController extends Controller
         $ticket = Ticket_detail::join("tickets", "tickets.id", "=", "ticket_details.ticket_id")
             ->join("users", "tickets.user_id", "=", "users.id")
             ->join("warehouses", "warehouses.id", "=", "ticket_details.warehouse_id")
-            ->select('tickets.id as Tid', 'tickets.code as Tcode', 'users.name as Uname', 'responsable', 'warehouses.item as Witem', 'warehouses.code as Wcode', 'ticket_details.quantity as Tquantity', 'ticket_details.id as TDid', 'tickets.created_at as Tcreated','unit')
+            ->select('tickets.id as Tid', 'tickets.code as Tcode', 'users.name as Uname', 'responsable', 'warehouses.item as Witem', 'warehouses.code as Wcode', 'ticket_details.quantity as Tquantity', 'ticket_details.id as TDid', 'tickets.created_at as Tcreated', 'unit')
             ->where("tickets.id", "=", $id)
             ->get();
         $now = Carbon::now();

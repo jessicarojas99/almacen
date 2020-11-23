@@ -213,11 +213,15 @@
     $('.cerrarinfo').click(function () {
         document.getElementById("lblEntregaFecha").value="";
         document.getElementById("fechadevolucion").style.display="none";
-     })
+    })
 
-     function ValidationClear(){
+    function ValidationClear(){
         document.getElementById("txtDelivery").classList.remove("is-invalid");
         document.getElementById("txtResponsable").classList.remove("is-invalid");
-        }
+    }
+
+    function cambioSelect(){
+        document.getElementById("btnItemSelect").disabled=false;
+    }
 </script>
 @endsection
