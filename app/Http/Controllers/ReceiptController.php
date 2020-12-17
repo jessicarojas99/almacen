@@ -90,9 +90,10 @@ class ReceiptController extends Controller
         if ($dato->fails()) {
             return response()->json(['errors' => $dato->errors()]);
         } else {
-
+            $mytime = Carbon::now();
+            $mytime = $mytime->format('d-m-Y');
             $receipt = new Receipt();
-            $receipt->code = "CF31";
+            $receipt->code = $request->code . "-" . $mytime;
             $receipt->responsable = ucwords($request->responsable);
             $receipt->unit = $request->unit;
             $receipt->delivery_date = $request->delivery;
@@ -144,7 +145,7 @@ class ReceiptController extends Controller
         $receipt = Receipt_detail::join("receipts", "receipts.id", "=", "receipt_details.receipt_id")
             ->join("users", "receipts.user_id", "=", "users.id")
             ->join("deposits", "deposits.id", "=", "receipt_details.deposit_id")
-            ->select(DB::raw("CONCAT(deposits.item,' - ',deposits.code) AS itemCode"), 'receipts.id as Rid', 'receipts.code as Rcode', 'users.name as Uname', 'responsable', 'delivery_date', 'return_date','unit')
+            ->select(DB::raw("CONCAT(deposits.item,' - ',deposits.code) AS itemCode"), 'receipts.id as Rid', 'receipts.code as Rcode', 'users.name as Uname', 'responsable', 'delivery_date', 'return_date', 'unit')
             ->where("receipts.id", "=", $id)
             ->get();
 
