@@ -112,6 +112,7 @@
         var _token =$("input[name=_token]").val();
         var responsable=$('#txtResponsable').val();
         var unit=$('#txtUnit').val();
+        var code=abreviacionUnidad(unit);
         var delivery=$('#txtDelivery').val();
         var returnDate=$('#txtReturn').val();
         var idDetailValue=[];
@@ -127,6 +128,7 @@
             data:{
                 responsable:responsable,
                 unit:unit,
+                code:code,
                 delivery:delivery,
                 return:returnDate,
                 idDetailValue:idDetailValue,
@@ -222,6 +224,29 @@
 
     function cambioSelect(){
         document.getElementById("btnItemSelect").disabled=false;
+    }
+
+    function abreviacionUnidad(unit){
+        let units={
+            "Gerencia General":["GG"],
+            "Unidad de Adquisiciones":["UD"],
+            "Unidad de RRHH":["URH"],
+            "Unidad Administrativa":["UA"],
+            "Unidad Financiera":["UF"],
+            "Unidad Contable":["UC"],
+            "Gerencia Comercial":["GC"],
+            "Gerencia de Planificacion y Proyectos":["GPP"],
+            "Unidad de Proyectos":["UP"],
+            "Unidad de Analisis Operativo":["UAO"],
+            "Unidad de Obras Civiles":["UOC"],
+            "Unidad de TI":["UTI"],
+            "Unidad de Seguridad Industrial":["USI"],
+            "Unidad de Auditoria Interna":["UAI"],
+            "Unidad de Transparencia":["UT"],
+            "Unidad de Asesoria Legal":["UAL"],
+        };
+        let indice=units[unit];
+        return(indice[0]);
     }
 </script>
 @endsection

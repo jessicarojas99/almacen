@@ -88,8 +88,10 @@ class TicketController extends Controller
         if ($dato->fails()) {
             return response()->json(['errors' => $dato->errors()]);
         } else {
+            $mytime = Carbon::now();
+            $mytime = $mytime->format('d-m-Y');
             $ticket = new Ticket();
-            $ticket->code = "CF31";
+            $ticket->code =  $request->code . "-" . $mytime;
             $ticket->responsable = ucwords($request->responsable);
             $ticket->unit = $request->unit;
             $ticket->user_id = Auth::id();
@@ -118,6 +120,9 @@ class TicketController extends Controller
         return back();
     }
 
+    public function codeGenerate($name)
+    {
+    }
     /**
      * Display the specified resource.
      *

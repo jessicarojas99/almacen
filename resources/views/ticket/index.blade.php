@@ -126,10 +126,11 @@
         var _token =$("input[name=_token]").val();
         var responsable=$('#txtResponsable').val();
         var unit=$('#txtUnit').val();
+        var code=abreviacionUnidad(unit);
         var quantityDetailValue=[];
         var idDetailValue=[];
         var quantityDetail=document.getElementsByName('quantityItem[]');
-        var idDetail=document.getElementsByName('idItem[]')
+        var idDetail=document.getElementsByName('idItem[]');
         for (let i = 0; i < quantityDetail.length; i++) {
             var elementquantity = quantityDetail[i];
             var elementid = idDetail[i];
@@ -143,6 +144,7 @@
             data:{
                 responsable:responsable,
                 unit:unit,
+                code:code,
                 quantityDetailValue:quantityDetailValue,
                 idDetailValue:idDetailValue,
                 _token:_token
@@ -194,6 +196,12 @@
         document.getElementById('subItem').innerHTML="";
         ValidationClear();
     })
+    $('#abrev').click(function () {
+        var unit=$('#txtUnit').val();
+        console.log(unit);
+        let result=abreviacionUnidad(unit);
+        console.log(result)
+    })
 </script>
 <script>
     function showItem(id){
@@ -215,5 +223,28 @@
     function ValidationClear(){
         document.getElementById("txtResponsable").classList.remove("is-invalid");
         }
+
+    function abreviacionUnidad(unit){
+        let units={
+            "Gerencia General":["GG"],
+            "Unidad de Adquisiciones":["UD"],
+            "Unidad de RRHH":["URH"],
+            "Unidad Administrativa":["UA"],
+            "Unidad Financiera":["UF"],
+            "Unidad Contable":["UC"],
+            "Gerencia Comercial":["GC"],
+            "Gerencia de Planificacion y Proyectos":["GPP"],
+            "Unidad de Proyectos":["UP"],
+            "Unidad de Analisis Operativo":["UAO"],
+            "Unidad de Obras Civiles":["UOC"],
+            "Unidad de TI":["UTI"],
+            "Unidad de Seguridad Industrial":["USI"],
+            "Unidad de Auditoria Interna":["UAI"],
+            "Unidad de Transparencia":["UT"],
+            "Unidad de Asesoria Legal":["UAL"],
+        };
+        let indice=units[unit];
+        return(indice[0]);
+    }
 </script>
 @endsection
